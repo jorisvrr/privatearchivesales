@@ -1,4 +1,4 @@
-// Form popup used by "Join the invitation list" and "Tell us about your stock".
+// Form popup used by "Join the mailing list" (/about) and "Plan an archive sale" (/for-labels).
 // ≥641 px: a nonmodal card anchored top-left (role=dialog, aria-modal=false; no trap, no scroll lock).
 // ≤640 px: a modal bottom sheet (aria-modal=true; focus trapped, page inert, background scroll locked).
 // Escape and × close it; focus returns to whichever trigger opened it.
@@ -16,6 +16,8 @@ export interface FormPanelOptions {
   triggerLabel: string;
   /** Everything under the header row: supporting copy, form, footer line. */
   body: HTMLElement;
+  /** Show the corner pill that reopens the panel. Off when the page has its own call to action. */
+  showTrigger?: boolean;
 }
 
 export class FormPanel {
@@ -46,6 +48,7 @@ export class FormPanel {
     pill.textContent = o.triggerLabel;
     this.trigger.append(pill);
     this.trigger.addEventListener('click', () => this.open({ opener: this.trigger }));
+    this.trigger.hidden = o.showTrigger === false;
 
     this.dialog = document.createElement('section');
     this.dialog.className = 'fp-panel';
@@ -111,6 +114,7 @@ export class FormPanel {
    */
   open({ opener = null as HTMLElement | null, focus = 'auto' as 'auto' | 'none', delay = 0 } = {}) {
     this.opener = opener ?? this.trigger;
+    this.opener.setAttribute('aria-expanded', 'true');
     if (this.open_) {
       if (focus === 'auto') this.focusInitial();
       return;
@@ -136,6 +140,7 @@ export class FormPanel {
     this.open_ = false;
     this.tween?.kill();
     this.trigger.setAttribute('aria-expanded', 'false');
+    this.opener?.setAttribute('aria-expanded', 'false');
     this.releaseModal();
     const finish = () => {
       this.dialog.hidden = true;

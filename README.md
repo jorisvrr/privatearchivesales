@@ -1,10 +1,10 @@
 # Orvel — Private archive sales
 
-Orvel organizes private archive sales for independent fashion labels. The site has three destinations, all public and account-free:
+Orvel builds and runs a temporary private archive-sale page on a fashion label's own website. The label pays a small upfront fee plus a percentage of sales made through that event. The site is public and account-free, with three destinations:
 
 - **Archive** `/`: the featured label's pieces on a WebGL sphere. Select a piece to enlarge it; open it for details at `/archive/<garment>`.
-- **Invitations** `/invitations`: the two-wave process and the signup form for Orvel's list (the second invitation).
-- **For labels** `/for-labels`: how hosting works, and the stock enquiry form.
+- **About** `/about`: what Orvel is, and "Join the mailing list" (the second invitation to each archive). `/invitations` redirects here permanently (301).
+- **For labels** `/for-labels`: the offer, how the fee works, three steps, and "Plan an archive sale", an email-only enquiry.
 
 The visual design and interactions follow the reference audit in `gionatan-nese/AUDIT.md` and `REBUILD.md`. Reference branding, fonts and media are not used.
 
@@ -26,14 +26,14 @@ Local form testing without real providers: `MAILING_PROVIDER=mock ENQUIRY_PROVID
 
 ## Launch configuration (not set yet)
 
-There was no existing mailing or contact integration in this project, so both forms go through `server/handlers.ts` (Vercel Functions in `api/`). Until configured, they reply "not open yet" and never show success. See `.env.example`; check with `node --env-file=.env scripts/check-config.mjs`.
+There was no existing mailing or contact integration in this project, so both forms go through `server/handlers.ts` (Vercel Functions in `api/`). Until configured, they reply "not open yet" and never show success. See `.env.example`; check with `node --env-file=.env scripts/check-config.mjs`. Tests can also run against the dev server: `E2E_DEV=1 node node_modules/@playwright/test/cli.js test`.
 
 | Form | Needs |
 |---|---|
-| Join the invitation list | `MAILING_PROVIDER=buttondown` + `BUTTONDOWN_API_KEY`, **or** `mailchimp` + `MAILCHIMP_API_KEY` + `MAILCHIMP_AUDIENCE_ID` |
-| Tell us about your stock | `ENQUIRY_PROVIDER=resend` + `RESEND_API_KEY` + `ENQUIRY_TO` + `ENQUIRY_FROM` (a verified sending domain), **or** `webhook` + `ENQUIRY_WEBHOOK_URL` |
+| Join the mailing list (/about) | `MAILING_PROVIDER=buttondown` + `BUTTONDOWN_API_KEY`, **or** `mailchimp` + `MAILCHIMP_API_KEY` + `MAILCHIMP_AUDIENCE_ID` |
+| Plan an archive sale (/for-labels) | `ENQUIRY_PROVIDER=resend` + `RESEND_API_KEY` + `ENQUIRY_TO` + `ENQUIRY_FROM` (a verified sending domain), **or** `webhook` + `ENQUIRY_WEBHOOK_URL` |
 
-Also needed before launch: a privacy notice to link from the signup form (EU signups), a decision on double opt-in, a production domain, and a booking system (booking is separate from the list and not built here).
+Enquiries and mailing-list signups are separate endpoints and providers. Also needed before launch: a privacy notice to link from the signup form (EU signups), a decision on double opt-in, and a production domain with a verified sender address.
 
 ## Content
 
@@ -49,6 +49,6 @@ Geist (sans) and Newsreader (serif), both SIL Open Font License, self-hosted thr
 
 - Spin, inertia and the intro ring are time-based, so 120 Hz screens behave like 60 Hz ones.
 - Esc collapses an enlarged piece. Navigation pills have larger invisible touch targets. Keyboard users get a visible list of pieces (Tab from the navigation).
-- Invitations and For labels have no preloader, so people arriving from Instagram or email reach the form immediately.
+- About and For labels have no preloader, so people arriving from Instagram or email reach the call to action immediately.
 - At rest, the bottom title slot shows the event credit ("[Featured label] — Archive Sale 001 · Organized by Orvel"), so the label leads.
 - Not built: the sound layer, the Projects grid (it serves as the no-WebGL fallback), the About head, and the lens-glass edge shader (Orvel's content pages are DOM, for native forms and accessibility).

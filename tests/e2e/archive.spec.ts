@@ -48,11 +48,11 @@ test.describe('desktop 1440×900', () => {
   });
 
   test('nav: wordmark and pills are measured and the group re-centres per route', async ({ page }) => {
-    await page.goto('/invitations');
+    await page.goto('/about');
     await page.waitForTimeout(1400); // nav drop-in: 1.2 s power4.out
     const measure = () => page.evaluate(() => (window as any).__orvel.nav.pillRects());
-    for (const [path, active] of [['/invitations', 1], ['/for-labels', 2], ['/', 0]] as const) {
-      if (path !== '/invitations') { await page.locator(`.pill[href="${path}"]`).click(); await settled(page); await page.waitForTimeout(700); }
+    for (const [path, active] of [['/about', 1], ['/for-labels', 2], ['/', 0]] as const) {
+      if (path !== '/about') { await page.locator(`.pill[href="${path}"]`).click(); await settled(page); await page.waitForTimeout(700); }
       const r = await measure();
       expect(r.logo.top).toBeCloseTo(11.7, 0);
       for (const p of r.pills) { expect(p.height).toBeCloseTo(27.4, 1); expect(p.top).toBe(8); }

@@ -6,6 +6,11 @@ import { handleEnquiry, handleSubscribe } from './server/handlers.ts';
 function api(): Plugin {
   const handle = async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
     const url = req.url ?? '';
+    // Same permanent redirect as vercel.json.
+    if (/^\/invitations\/?(\?|$)/.test(url)) {
+      res.writeHead(301, { location: '/about' + (url.includes('?') ? url.slice(url.indexOf('?')) : '') });
+      return res.end();
+    }
     const route = url.startsWith('/api/subscribe') ? handleSubscribe : url.startsWith('/api/enquiry') ? handleEnquiry : null;
     if (!route) return next();
     const chunks: Buffer[] = [];

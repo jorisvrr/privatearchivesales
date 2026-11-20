@@ -5,14 +5,14 @@ import './styles.css';
 import { gsap } from 'gsap';
 import { Nav, type NavName } from './nav';
 import { ArchivePage } from './pages/archive';
-import { invitationsPage } from './pages/invitations';
+import { aboutPage } from './pages/about';
 import { labelsPage } from './pages/labels';
 import { notFoundPage, piecePage } from './pages/piece';
 import { parseRoute, type Page, type Route } from './pages/types';
 import { prefersReduced } from './ui/reveal';
 
 const SLIDE = 1.2;
-const ORDER: Record<string, number> = { archive: 0, invitations: 1, labels: 2 };
+const ORDER: Record<string, number> = { archive: 0, about: 1, labels: 2 };
 
 const root = document.getElementById('pages')!;
 const chromeRoot = document.getElementById('chrome')!;
@@ -21,14 +21,14 @@ let archive: ArchivePage | null = null;
 let current: Page | null = null;
 let running: { tween: gsap.core.Tween | null; finish: () => void } | null = null;
 
-const navName = (r: Route): NavName => (r.name === 'piece' ? 'archive' : r.name === 'invitations' ? 'invitations' : r.name === 'labels' ? 'labels' : 'archive');
+const navName = (r: Route): NavName => (r.name === 'about' ? 'about' : r.name === 'labels' ? 'labels' : 'archive');
 
 function makePage(route: Route): Page {
   switch (route.name) {
     case 'archive':
       return (archive ??= new ArchivePage(nav, (p) => go(p, 'push')));
-    case 'invitations':
-      return invitationsPage(route);
+    case 'about':
+      return aboutPage(route);
     case 'labels':
       return labelsPage(route);
     case 'piece':
@@ -52,6 +52,11 @@ function unmount(p: Page) {
 async function go(href: string, kind: 'push' | 'pop' | 'initial') {
   const url = new URL(href, location.href);
   const route = parseRoute(url.pathname);
+  // Old /invitations links land on /about (the server answers with a 301; this covers in-app and dev).
+  if (url.pathname.replace(/\/+$/, '') === '/invitations') {
+    url.pathname = '/about';
+    if (kind !== 'push') history.replaceState(null, '', url.pathname + url.search + url.hash);
+  }
   if (kind === 'push') {
     if (current && route.path === current.route.path) {
       if (url.hash !== location.hash) history.replaceState(null, '', url.pathname + url.hash);

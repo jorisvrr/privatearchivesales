@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Orvel — Private archive sales</title>
-    <meta name="description" content="Orvel organizes private archive sales for independent fashion labels. Join the invitation list, or host a sale for your label." />
+    <meta name="description" content="Private archive sales for independent labels. Each archive opens on the label’s own website." />
     <meta name="theme-color" content="#ffffff" />
     <meta property="og:title" content="Orvel — Private archive sales" />
-    <meta property="og:description" content="Private archive sales for independent fashion labels." />
+    <meta property="og:description" content="Private archive sales for independent labels. Each archive opens on the label’s own website." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" as="image" href="/media/demo/01-jacket-full-s.jpg" />
   </head>
@@ -18,23 +18,20 @@
     <noscript>
       <div class="noscript">
         <p class="noscript__brand">Orvel <span>Private archive sales</span></p>
-        <h1>Join the invitation list</h1>
-        <p>Past customers of the featured label are invited first. Join Orvel’s list for the second invitation.</p>
+        <h1>Private archive sales for independent labels.</h1>
+        <p>Orvel works with independent labels to bring past collections and samples back for a limited sale. Each archive opens on the label’s own website. The label invites its past customers first, then Orvel sends the second invitation to its mailing list.</p>
         <form method="post" action="/api/subscribe">
           <label for="ns-email">Email address</label>
           <input id="ns-email" name="email" type="email" required autocomplete="email" />
-          <button type="submit">Join the list</button>
+          <button type="submit">Join the mailing list</button>
         </form>
-        <h2>Host a private archive sale.</h2>
-        <p>You choose the pieces and approve the prices. Orvel organizes the invitations, bookings, and event.</p>
+        <h2>Open your archive on your own site.</h2>
+        <p>Give past collections and samples a dedicated sale on the website your customers already know. You choose the pieces and approve the prices. Orvel builds the page, coordinates the invitations, and removes the page when the drop ends.</p>
+        <p>A small upfront fee covers setup. Orvel then earns a percentage of sales made through the archive event.</p>
         <form method="post" action="/api/enquiry">
-          <label for="ns-label">Label name</label><input id="ns-label" name="label" required />
-          <label for="ns-cemail">Contact email</label><input id="ns-cemail" name="email" type="email" required />
-          <label for="ns-city">City</label><input id="ns-city" name="city" required />
-          <label for="ns-qty">Approximate quantity</label>
-          <select id="ns-qty" name="quantity" required><option value="">Choose a range</option><option>Fewer than 50 pieces</option><option>50 to 150 pieces</option><option>150 to 400 pieces</option><option>More than 400 pieces</option></select>
-          <label for="ns-note">Note (optional)</label><textarea id="ns-note" name="note" rows="3"></textarea>
-          <button type="submit">Tell us about your stock</button>
+          <label for="ns-work">Work email</label>
+          <input id="ns-work" name="email" type="email" required autocomplete="email" />
+          <button type="submit">Contact Orvel</button>
         </form>
       </div>
     </noscript>

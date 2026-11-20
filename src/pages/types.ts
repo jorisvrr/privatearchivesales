@@ -1,4 +1,4 @@
-export type RouteName = 'archive' | 'invitations' | 'labels' | 'piece' | 'notfound';
+export type RouteName = 'archive' | 'about' | 'labels' | 'piece' | 'notfound';
 
 export interface Route {
   name: RouteName;
@@ -36,7 +36,8 @@ export interface Page {
 export function parseRoute(pathname: string): Route {
   const path = pathname.replace(/\/+$/, '') || '/';
   if (path === '/' || path === '/archive') return { name: 'archive', path: '/' };
-  if (path === '/invitations') return { name: 'invitations', path };
+  // /invitations moved to /about (permanent redirect on the server; mirrored here for in-app links).
+  if (path === '/about' || path === '/invitations') return { name: 'about', path: '/about' };
   if (path === '/for-labels') return { name: 'labels', path };
   const m = path.match(/^\/archive\/([a-z0-9-]+)$/);
   if (m) return { name: 'piece', path, slug: m[1] };

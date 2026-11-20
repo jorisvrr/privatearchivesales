@@ -1,5 +1,9 @@
 import { defineConfig } from '@playwright/test';
 
+// E2E_DEV=1 runs the suite against the Vite dev server instead of the production build.
+const dev = process.env.E2E_DEV === '1';
+const port = dev ? 5174 : 4174;
+
 export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 60_000,
@@ -7,12 +11,14 @@ export default defineConfig({
   workers: 4,
   reporter: [['list']],
   use: {
-    baseURL: 'http://localhost:4174',
+    baseURL: `http://localhost:${port}`,
     launchOptions: { args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist'] },
   },
   webServer: {
-    command: 'node node_modules/vite/bin/vite.js build && node node_modules/vite/bin/vite.js preview --port 4174 --strictPort',
-    url: 'http://localhost:4174',
+    command: dev
+      ? `node node_modules/vite/bin/vite.js --port ${port} --strictPort`
+      : `node node_modules/vite/bin/vite.js build && node node_modules/vite/bin/vite.js preview --port ${port} --strictPort`,
+    url: `http://localhost:${port}`,
     reuseExistingServer: false,
     timeout: 60_000,
     env: { MAILING_PROVIDER: 'mock', ENQUIRY_PROVIDER: 'mock', ORVEL_ALLOW_MOCK: '1' },

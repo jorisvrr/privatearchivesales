@@ -7,7 +7,7 @@ const reply = (status: number, body: unknown) => vi.fn(async () => new Response(
 const BD = { MAILING_PROVIDER: 'buttondown', BUTTONDOWN_API_KEY: 'k' };
 const MC = { MAILING_PROVIDER: 'mailchimp', MAILCHIMP_API_KEY: 'abc-us21', MAILCHIMP_AUDIENCE_ID: 'list1' };
 const RS = { ENQUIRY_PROVIDER: 'resend', RESEND_API_KEY: 'k', ENQUIRY_TO: 'hello@orvel.example', ENQUIRY_FROM: 'Orvel <site@orvel.example>' };
-const enquiry = { label: 'Studio A', email: 'founder@studio.example', city: 'Amsterdam', quantity: '50 to 150 pieces', note: '' };
+const enquiry = { email: 'founder@studio.example' };
 
 describe('email validation', () => {
   it.each(['a@b.co', 'first.last+tag@sub.example.nl'])('accepts %s', (e) => expect(isEmail(e)).toBe(true));
@@ -61,7 +61,7 @@ describe('POST /api/subscribe', () => {
   it('form posts (no JavaScript) get an HTML page with the outcome', async () => {
     const r = await handleSubscribe(form('/api/subscribe', { email: 'a@b.co' }), BD, reply(201, {}));
     expect(r.headers.get('content-type')).toContain('text/html');
-    expect(await r.text()).toContain('You’re on Orvel’s list. We’ll email you when booking opens.');
+    expect(await r.text()).toContain('You’re on the list. We’ll email you when the next archive opens.');
   });
   it('reports double opt-in so the page can ask people to confirm by email', async () => {
     const ok = async (env: Record<string, string>) => (await (await handleSubscribe(json('/api/subscribe', { email: `c${Math.random()}@b.co` }), env, reply(200, { id: 'x' }))).json()).confirm;
@@ -76,27 +76,38 @@ describe('POST /api/subscribe', () => {
   });
 });
 
-describe('POST /api/enquiry', () => {
-  it('requires label, email, city and quantity', async () => {
-    const r = await handleEnquiry(json('/api/enquiry', { ...enquiry, label: '', email: 'x' }), RS, reply(200, { id: '1' }));
+describe('POST /api/enquiry (work email only)', () => {
+  it('requires a valid work email and nothing else', async () => {
+    const r = await handleEnquiry(json('/api/enquiry', { email: 'x' }), RS, reply(200, { id: '1' }));
     expect(r.status).toBe(422);
-    expect((await r.json()).fields).toEqual(['label', 'email']);
+    expect((await r.json()).fields).toEqual(['email']);
+    expect((await handleEnquiry(json('/api/enquiry', { email: 'founder@studio.example' }), RS, reply(200, { id: '1' }))).status).toBe(200);
   });
   it('is not_configured without a provider', async () => {
     expect((await handleEnquiry(json('/api/enquiry', enquiry), {})).status).toBe(503);
   });
-  it('Resend: success only with a message id; reply-to is the founder', async () => {
+  it('Resend: success only with a message id; reply-to is the founder; separate from the mailing list', async () => {
     const f = reply(200, { id: 'msg_1' });
     const r = await handleEnquiry(json('/api/enquiry', enquiry), RS, f);
     expect(r.status).toBe(200);
-    const body = JSON.parse(String((f.mock.calls[0] as unknown as [string, RequestInit])[1].body));
-    expect(body).toMatchObject({ to: ['hello@orvel.example'], reply_to: 'founder@studio.example', subject: 'Stock enquiry: Studio A (Amsterdam)' });
-    expect(body.text).toContain('Approximate quantity: 50 to 150 pieces');
+    const [url, init] = f.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe('https://api.resend.com/emails');
+    const body = JSON.parse(String(init.body));
+    expect(body).toMatchObject({ to: ['hello@orvel.example'], reply_to: 'founder@studio.example', subject: 'Archive sale enquiry: founder@studio.example' });
+    expect(body.text).toContain('stock, timing and terms');
     expect((await handleEnquiry(json('/api/enquiry', enquiry), RS, reply(200, {}))).status).toBe(502);
     expect((await handleEnquiry(json('/api/enquiry', enquiry), RS, reply(403, 'domain not verified'))).status).toBe(502);
   });
-  it('webhook delivery', async () => {
+  it('webhook delivery carries only the email', async () => {
     const f = reply(202, '');
     expect((await handleEnquiry(json('/api/enquiry', enquiry), { ENQUIRY_PROVIDER: 'webhook', ENQUIRY_WEBHOOK_URL: 'https://hook.example/x' }, f)).status).toBe(200);
+    const body = JSON.parse(String((f.mock.calls[0] as unknown as [string, RequestInit])[1].body));
+    expect(Object.keys(body).sort()).toEqual(['email', 'receivedAt', 'type']);
+  });
+  it('no-JavaScript posts get an answer page that links back to the right page', async () => {
+    const r = await handleSubscribe(form('/api/subscribe', { email: 'a@b.co' }), BD, reply(201, {}));
+    const html = await r.text();
+    expect(html).toContain('You’re on the list. We’ll email you when the next archive opens.');
+    expect(html).toContain('href="/about"');
   });
 });

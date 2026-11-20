@@ -36,9 +36,9 @@ export function piecePage(route: Route): Page | null {
     list('Details', ...(supplied.length
       ? supplied.map(([k, v]) => h('p', { class: 'panel__item', 'data-reveal': 'words' }, `${k}: ${v}`))
       : [h('p', { class: 'panel__item', 'data-reveal': 'words' }, 'To be confirmed by the label')])),
-    list('At the sale',
-      h('p', { class: 'panel__item', 'data-reveal': 'lines' }, 'Pieces are sold in person at the sale, not online.'),
-      h('p', { class: 'panel__item', 'data-reveal': 'block' }, h('a', { href: '/invitations', class: 'panel__link' }, 'Join the invitation list')),
+    list('Availability',
+      h('p', { class: 'panel__item', 'data-reveal': 'lines' }, 'Sold on the label’s own website while its archive is open.'),
+      h('p', { class: 'panel__item', 'data-reveal': 'block' }, h('a', { href: '/about', class: 'panel__link' }, 'Join the mailing list')),
     ),
   );
   const panel = new Panel({ id: 'details', label: 'Piece details', closedLabel: 'Details', body });

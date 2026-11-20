@@ -117,8 +117,8 @@ img { display: block; max-width: 100%; }
   background: rgba(255,255,255,.5); -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px); }
 .page--piece .foot { margin-top: 80px; }
 
-/* ------------------------------------------------------------------ chapters (invitations, labels) */
-.waves, .steps { margin: 120px auto 0; padding: 0 16px; max-width: 760px; }
+/* ------------------------------------------------------------------ chapters (for labels) */
+.steps { margin: 120px auto 0; padding: 0 16px; max-width: 760px; }
 .chapter + .chapter { margin-top: 96px; }
 .chapter__row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 70px; }
 .chapter__side { font: 500 14px/1.4 var(--sans); color: var(--ink); }
@@ -126,19 +126,17 @@ img { display: block; max-width: 100%; }
 .chapter__side--r { text-align: left; }
 .chapter__num { font: 400 64px/1 var(--serif); min-width: 1ch; text-align: center; }
 .chapter__text { margin: 32px auto 0; max-width: 340px; text-align: center; font: 400 16px/25.6px var(--serif); }
-.waves__note { margin: 96px auto 0; max-width: 360px; text-align: center; font: 400 16px/25.6px var(--serif); }
-.waves__meta { margin-top: 16px; text-align: center; font: 500 12px/1.4 var(--sans); opacity: 0.6; }
 
 .lede { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 16px 40px; text-align: center; }
 .lede__title { font: 300 75px/1.18 var(--serif); letter-spacing: -0.01em; max-width: 900px; -webkit-text-stroke: 0.015em currentColor; }
 .lede__copy { margin-top: 48px; max-width: 430px; font: 400 17px/1.45 var(--serif); }
 .cta {
-  margin-top: 21px; height: var(--fp-control); padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto;
-  display: inline-flex; align-items: center; color: var(--ink-dom);
+  margin-top: 28px; height: var(--fp-control); padding: 0 18px; border: 0; border-radius: var(--radius); cursor: pointer; pointer-events: auto;
+  display: inline-flex; align-items: center; background: var(--ink); color: #fff; font: 500 14px/1 var(--sans); white-space: nowrap;
 }
-.cta .cta__pill { height: auto; padding: 7px 12px; font: 500 13px/1.2 var(--sans); background: var(--glass); }
-.cta:hover .cta__pill { background: var(--glass-hover); }
-.steps .cta { display: flex; margin: 33px auto 0; }
+.cta:hover { background: #2b2b2b; }
+.cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.lede__price { margin-top: 20px; max-width: 430px; font: 400 15px/1.45 var(--serif); color: var(--ink); }
 
 /* ------------------------------------------------------------------ glass panel / bottom sheet */
 .panel {
@@ -168,19 +166,20 @@ img { display: block; max-width: 100%; }
 .panel.is-sheet .panel__body { top: 40px; padding-top: 18px; }
 .panel.is-sheet.is-open .panel__bar { display: block; position: absolute; top: 6px; left: 50%; width: 47px; height: 2px; margin-left: -23.5px; border-radius: 2px; background: rgba(0, 0, 0, 0.4); }
 
-/* ------------------------------------------------------------------ form popups (invitation list, stock enquiry) */
+/* ------------------------------------------------------------------ form popups (mailing list, archive-sale enquiry) */
 .fp-trigger {
   position: fixed; z-index: 60; top: 1px; left: 8px; height: var(--fp-control); padding: 0; border: 0;
   display: flex; align-items: center; background: none; cursor: pointer; pointer-events: auto; color: var(--ink-dom);
 }
-.fp-trigger__pill, .cta__pill {
+.fp-trigger__pill {
   display: block; height: 30px; padding: 6px 8px; border-radius: var(--radius); white-space: nowrap;
   background: var(--panel); -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px);
   font: 400 15px/18px var(--serif); transition: background-color .35s cubic-bezier(.25,.46,.45,.94);
 }
 .fp-trigger:hover .fp-trigger__pill { background: var(--glass-hover); }
-.fp-trigger:focus-visible, .cta:focus-visible { outline: none; }
-.fp-trigger:focus-visible .fp-trigger__pill, .cta:focus-visible .cta__pill { outline: 2px solid var(--ink); outline-offset: 2px; }
+.fp-trigger[hidden] { display: none; }
+.fp-trigger:focus-visible { outline: none; }
+.fp-trigger:focus-visible .fp-trigger__pill { outline: 2px solid var(--ink); outline-offset: 2px; }
 .fp.is-open .fp-trigger { visibility: hidden; }
 
 .fp-panel {
@@ -331,11 +330,7 @@ img { display: block; max-width: 100%; }
   .chapter__row { column-gap: 24px; }
   .chapter__num { font-size: 52px; }
   .head { padding-top: 160px; }
-  .waves, .steps { padding-bottom: 200px; }
-  .page--invitations .page__scroll { padding-bottom: 360px; }
-}
-@media (max-width: 1024px) {
-  .page--invitations .page__scroll { padding-bottom: 380px; }
+  .steps { padding-bottom: 120px; }
 }
 
 /* ------------------------------------------------------------------ no JavaScript */

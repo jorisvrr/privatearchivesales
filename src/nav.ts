@@ -4,10 +4,10 @@ import { gsap } from 'gsap';
 import { isDemo } from './content/sale';
 import { prefersReduced } from './ui/reveal';
 
-export type NavName = 'archive' | 'invitations' | 'labels';
+export type NavName = 'archive' | 'about' | 'labels';
 const ITEMS: { name: NavName; label: string; href: string }[] = [
   { name: 'archive', label: 'Archive', href: '/' },
-  { name: 'invitations', label: 'Invitations', href: '/invitations' },
+  { name: 'about', label: 'About', href: '/about' },
   { name: 'labels', label: 'For labels', href: '/for-labels' },
 ];
 

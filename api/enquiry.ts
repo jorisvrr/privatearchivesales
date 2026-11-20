@@ -1,4 +1,4 @@
-// Vercel Function: POST /api/enquiry — delivers a label's stock enquiry to Orvel.
+// Vercel Function: POST /api/enquiry — delivers a founder's archive-sale enquiry (work email) to Orvel.
 import { handleEnquiry } from '../server/handlers';
 
 export function POST(request: Request) {

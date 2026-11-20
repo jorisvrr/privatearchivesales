@@ -1,56 +1,52 @@
-// For labels: onboarding for founders, with the stock enquiry in the glass panel.
+// For labels: the offer on the first screen, then three steps, with an email-only enquiry.
 import { ENQUIRY, wireForm } from '../forms';
 import { FormPanel } from '../ui/form-panel';
 import { revealIn } from '../ui/reveal';
-import { chapter } from './invitations';
 import { h, type EnterInfo, type Page, type Route } from './types';
 
-const QUANTITIES = ['Fewer than 50 pieces', '50 to 150 pieces', '150 to 400 pieces', 'More than 400 pieces'];
+export function chapter(num: string, left: string, right: string, text: string) {
+  return h('div', { class: 'chapter' },
+    h('div', { class: 'chapter__row' },
+      h('span', { class: 'chapter__side chapter__side--l', 'data-reveal': 'words' }, left),
+      h('span', { class: 'chapter__num', 'aria-hidden': 'true', 'data-reveal': 'words' }, num),
+      h('h2', { class: 'chapter__side chapter__side--r', 'data-reveal': 'words' }, right),
+    ),
+    h('p', { class: 'chapter__text', 'data-reveal': 'lines' }, text),
+  );
+}
 
 export function labelsPage(route: Route): Page {
-  const cta = (cls: string) => h('button', { type: 'button', class: `cta ${cls}`, 'aria-controls': 'enquiry', 'aria-haspopup': 'dialog', 'data-reveal': 'block' }, h('span', { class: 'cta__pill' }, 'Tell us about your stock'));
+  const cta = h('button', { type: 'button', class: 'cta', 'aria-controls': 'enquiry', 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'data-reveal': 'block' }, 'Plan an archive sale') as HTMLButtonElement;
   const scroll = h('div', { class: 'page__scroll' },
     h('header', { class: 'lede' },
-      h('h1', { class: 'lede__title', tabindex: '-1', 'data-reveal': 'lines' }, 'Host a private archive sale.'),
-      h('p', { class: 'lede__copy', 'data-reveal': 'lines' }, 'You choose the pieces and approve the prices. Orvel organizes the invitations, bookings, and event.'),
-      cta('cta--lede'),
+      h('h1', { class: 'lede__title', tabindex: '-1', 'data-reveal': 'lines' }, 'Open your archive on your own site.'),
+      h('p', { class: 'lede__copy', 'data-reveal': 'lines' }, 'Give past collections and samples a dedicated sale on the website your customers already know. You choose the pieces and approve the prices. Orvel builds the page, coordinates the invitations, and removes the page when the drop ends.'),
+      h('p', { class: 'lede__price', 'data-reveal': 'lines' }, 'A small upfront fee covers setup. Orvel then earns a percentage of sales made through the archive event.'),
+      cta,
     ),
-    h('section', { class: 'steps', 'aria-label': 'What happens after you get in touch' },
-      chapter('I', 'Step one', 'Stock review', 'We discuss the pieces, quantities, sizes, and city with you.'),
-      chapter('II', 'Step two', 'Sale proposal', 'We agree on the venue, costs, responsibilities, and what the sale needs to earn to make sense for your label.'),
-      chapter('III', 'Step three', 'Final approval', 'You review the inventory, prices, preview, and invitation schedule before anything goes out.'),
-      h('p', { class: 'waves__note', 'data-reveal': 'lines' }, 'No item-by-item inventory sheet yet. That comes after the first conversation.'),
-      cta('cta--end'),
+    h('section', { class: 'steps', 'aria-label': 'How an archive sale works' },
+      chapter('I', 'Step one', 'Select the archive', 'The label chooses the pieces, prices and sale window.'),
+      chapter('II', 'Step two', 'Open the page', 'Orvel builds a dedicated page on the label’s existing website. The label invites past customers first. Orvel’s mailing list receives the second invitation.'),
+      chapter('III', 'Step three', 'Close the sale', 'Once the drop ends, Orvel removes the dedicated page and reviews event sales with the label. The percentage applies only to sales attributable to that event.'),
     ),
     h('footer', { class: 'foot' }, 'Orvel — Private archive sales'),
   );
   const el = h('main', { class: 'page page--labels', id: 'main' }, scroll);
 
-  const field = (id: string, label: (Node | string)[], input: HTMLElement) =>
-    h('div', { class: 'fp-field' }, h('label', { for: id, class: 'fp-label' }, ...label), input);
-  const select = h('select', { id: 'enq-quantity', name: 'quantity', required: '', class: 'fp-input fp-select' },
-    h('option', { value: '' }, 'Choose a range'),
-    ...QUANTITIES.map((q) => h('option', { value: q }, q)),
-  );
   const form = h('form', { class: 'fp-form', method: 'post', action: '/api/enquiry', novalidate: '' },
-    field('enq-label', ['Label name'], h('input', { id: 'enq-label', name: 'label', type: 'text', required: '', autocomplete: 'organization', maxlength: '120', class: 'fp-input' })),
-    field('enq-email', ['Contact email'], h('input', { id: 'enq-email', name: 'email', type: 'email', required: '', autocomplete: 'email', inputmode: 'email', spellcheck: 'false', class: 'fp-input' })),
-    h('div', { class: 'fp-row' },
-      field('enq-city', ['City'], h('input', { id: 'enq-city', name: 'city', type: 'text', required: '', autocomplete: 'address-level2', maxlength: '80', class: 'fp-input' })),
-      field('enq-quantity', ['Approximate quantity'], select),
-    ),
-    field('enq-note', ['Note ', h('span', { class: 'fp-label__hint' }, '(optional)')], h('textarea', { id: 'enq-note', name: 'note', rows: '3', maxlength: '2000', class: 'fp-input fp-textarea' })),
-    h('input', { type: 'text', name: 'website', class: 'hp', tabindex: '-1', autocomplete: 'off', 'aria-hidden': 'true' }),
     h('p', { class: 'fp-alert', 'data-alert': '', hidden: '' }),
-    h('div', { class: 'fp-actions' }, h('button', { type: 'submit', class: 'fp-button' }, 'Send enquiry')),
+    h('div', { class: 'fp-field' },
+      h('label', { for: 'enq-email', class: 'fp-label' }, 'Work email'),
+      h('div', { class: 'fp-inline' },
+        h('input', { id: 'enq-email', name: 'email', type: 'email', required: '', autocomplete: 'email', inputmode: 'email', spellcheck: 'false', class: 'fp-input' }),
+        h('button', { type: 'submit', class: 'fp-button' }, 'Contact Orvel'),
+      ),
+    ),
+    h('input', { type: 'text', name: 'website', class: 'hp', tabindex: '-1', autocomplete: 'off', 'aria-hidden': 'true' }),
   );
-  const body = h('div', {},
-    h('p', { class: 'fp-copy' }, 'A rough outline is enough. We’ll email you to arrange a stock review.'),
-    form,
-  );
-  const panel = new FormPanel({ id: 'enquiry', title: 'Tell us about your stock', triggerLabel: 'Tell us about your stock', body });
+  const panel = new FormPanel({ id: 'enquiry', title: 'Plan an archive sale', triggerLabel: 'Plan an archive sale', body: h('div', {}, form), showTrigger: false });
   const chrome = h('div', { class: 'chrome' }, panel.el);
-  el.querySelectorAll<HTMLButtonElement>('.cta').forEach((b) => b.addEventListener('click', () => panel.open({ opener: b })));
+  cta.addEventListener('click', () => panel.open({ opener: cta }));
 
   wireForm(form, {
     endpoint: '/api/enquiry',
@@ -66,7 +62,7 @@ export function labelsPage(route: Route): Page {
 
   return {
     route,
-    title: 'Host a private archive sale — Orvel',
+    title: 'For labels — Orvel',
     el,
     chrome,
     ready: Promise.resolve(),

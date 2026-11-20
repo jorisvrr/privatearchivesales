@@ -1,10 +1,10 @@
 // Form endpoints shared by the Vercel functions (api/*.ts) and the local dev/preview server.
 // Web-standard Request → Response. Success is returned only once the provider has accepted the request.
 //
-// Invitation list (second wave), MAILING_PROVIDER:
+// Mailing list (second invitation to each archive), MAILING_PROVIDER:
 //   buttondown  BUTTONDOWN_API_KEY [BUTTONDOWN_TAGS="wave-2"] [MAILING_DOUBLE_OPT_IN=1 if the newsletter uses double opt-in]
 //   mailchimp   MAILCHIMP_API_KEY (ends in -usX), MAILCHIMP_AUDIENCE_ID [MAILCHIMP_DOUBLE_OPT_IN=1] [MAILCHIMP_TAGS="wave-2"]
-// Label enquiries, ENQUIRY_PROVIDER:
+// Archive-sale enquiries (work email only), ENQUIRY_PROVIDER:
 //   resend      RESEND_API_KEY, ENQUIRY_TO, ENQUIRY_FROM (a sender on a domain verified in Resend)
 //   webhook     ENQUIRY_WEBHOOK_URL [ENQUIRY_WEBHOOK_SECRET]
 // Local tests only: provider "mock" with ORVEL_ALLOW_MOCK=1 (refused when running on Vercel).
@@ -19,16 +19,16 @@ export type Result = 'ok' | 'duplicate' | 'invalid' | 'not_configured' | 'failed
 
 const MESSAGES: Record<'subscribe' | 'enquiry', Record<Result, string>> = {
   subscribe: {
-    ok: 'You’re on Orvel’s list. We’ll email you when booking opens.',
-    duplicate: 'This address is already on Orvel’s list. We’ll email you when booking opens.',
+    ok: 'You’re on the list. We’ll email you when the next archive opens.',
+    duplicate: 'This address is already on Orvel’s list. We’ll email you when the next archive opens.',
     invalid: 'Enter a valid email address, like name@example.com.',
-    not_configured: 'The invitation list isn’t open yet. Your address wasn’t saved.',
+    not_configured: 'The mailing list isn’t open yet. Your address wasn’t saved.',
     failed: 'Your address wasn’t added. Please try again in a moment.',
   },
   enquiry: {
-    ok: 'Thank you. Orvel has received your enquiry and will reply by email to arrange the stock review.',
-    duplicate: 'Thank you. Orvel has received your enquiry.',
-    invalid: 'Some fields are missing or invalid. Go back and check them.',
+    ok: 'Thanks. Orvel will follow up personally about stock, timing and terms.',
+    duplicate: 'Thanks. Orvel will follow up personally about stock, timing and terms.',
+    invalid: 'Enter a valid work email, like name@label.com.',
     not_configured: 'Enquiries can’t be sent from this page yet. Nothing was sent.',
     failed: 'Your enquiry wasn’t sent. Please try again in a moment.',
   },
@@ -90,7 +90,7 @@ function respond(kind: 'subscribe' | 'enquiry', result: Result, asForm: boolean,
     });
   }
   // No-JavaScript fallback: a minimal confirmation or error page.
-  const back = kind === 'subscribe' ? '/invitations' : '/for-labels';
+  const back = kind === 'subscribe' ? '/about' : '/for-labels';
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Orvel — Private archive sales</title>
 <style>body{margin:0;font:400 17px/1.45 Georgia,serif;color:#000;background:#fff}main{max-width:460px;margin:22vh auto 0;padding:0 16px}p.b{font:500 14px Arial,sans-serif;margin-bottom:40px}a{font:500 13px Arial,sans-serif;color:#000}</style></head>
 <body><main><p class="b">Orvel</p><p role="status">${message}</p><p><a href="${back}">Back</a></p></main></body></html>`;
@@ -99,7 +99,7 @@ function respond(kind: 'subscribe' | 'enquiry', result: Result, asForm: boolean,
 
 const methodNotAllowed = () => new Response('Method not allowed', { status: 405, headers: { allow: 'POST' } });
 
-// --------------------------------------------------------------- invitation list
+// --------------------------------------------------------------- mailing list
 
 const mockList = new Set<string>();
 
@@ -165,35 +165,23 @@ async function subscribeWith(env: Env, email: string, f: Fetch): Promise<Result>
   }
 }
 
-// --------------------------------------------------------------- label enquiries
+// --------------------------------------------------------------- archive-sale enquiries
 
-const clean = (v: string | undefined, max: number) => (v ?? '').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').trim().slice(0, max);
+const clean = (v: string | undefined, max: number) => (v ?? '').replace(/[\u0000-\u001f]/g, '').trim().slice(0, max);
 
 export async function handleEnquiry(req: Request, env: Env, f: Fetch = fetch): Promise<Response> {
   if (req.method !== 'POST') return methodNotAllowed();
   const { data, form } = await readBody(req);
-  if (data.website) return respond('enquiry', 'ok', form);
-  const e = {
-    label: clean(data.label, 120),
-    email: clean(data.email, 254).toLowerCase(),
-    city: clean(data.city, 80),
-    quantity: clean(data.quantity, 60),
-    note: clean(data.note, 2000),
-  };
-  const bad = [
-    !e.label && 'label',
-    !isEmail(e.email) && 'email',
-    !e.city && 'city',
-    !e.quantity && 'quantity',
-  ].filter(Boolean) as string[];
-  if (bad.length) return respond('enquiry', 'invalid', form, bad);
+  if (data.website) return respond('enquiry', 'ok', form); // honeypot
+  const email = clean(data.email, 254).toLowerCase();
+  if (!isEmail(email)) return respond('enquiry', 'invalid', form, ['email']);
   if (missingConfig(env).enquiry.length) {
     console.warn('[orvel] enquiry not configured:', missingConfig(env).enquiry.join(', '));
     return respond('enquiry', 'not_configured', form);
   }
   let result: Result;
   try {
-    result = await deliverEnquiry(env, e, f);
+    result = await deliverEnquiry(env, email, f);
   } catch (err) {
     console.error('[orvel] enquiry failed', err);
     result = 'failed';
@@ -201,21 +189,17 @@ export async function handleEnquiry(req: Request, env: Env, f: Fetch = fetch): P
   return respond('enquiry', result, form);
 }
 
-export function enquiryText(e: { label: string; email: string; city: string; quantity: string; note: string }) {
+export function enquiryText(email: string) {
   return [
-    `New stock enquiry for Orvel`,
-    ``,
-    `Label: ${e.label}`,
-    `Contact email: ${e.email}`,
-    `City: ${e.city}`,
-    `Approximate quantity: ${e.quantity}`,
-    `Note: ${e.note || '(none)'}`,
-    ``,
-    `Next step: reply to arrange the stock review. The item-by-item inventory sheet comes after the first conversation.`,
+    'New archive-sale enquiry for Orvel',
+    '',
+    `Work email: ${email}`,
+    '',
+    'Next step: reply personally about stock, timing and terms.',
   ].join('\n');
 }
 
-async function deliverEnquiry(env: Env, e: { label: string; email: string; city: string; quantity: string; note: string }, f: Fetch): Promise<Result> {
+async function deliverEnquiry(env: Env, email: string, f: Fetch): Promise<Result> {
   switch (env.ENQUIRY_PROVIDER) {
     case 'resend': {
       const res = await f('https://api.resend.com/emails', {
@@ -224,9 +208,9 @@ async function deliverEnquiry(env: Env, e: { label: string; email: string; city:
         body: JSON.stringify({
           from: env.ENQUIRY_FROM,
           to: [env.ENQUIRY_TO],
-          reply_to: e.email,
-          subject: `Stock enquiry: ${e.label} (${e.city})`,
-          text: enquiryText(e),
+          reply_to: email,
+          subject: `Archive sale enquiry: ${email}`,
+          text: enquiryText(email),
         }),
       });
       if (!res.ok) {
@@ -240,12 +224,12 @@ async function deliverEnquiry(env: Env, e: { label: string; email: string; city:
       const res = await f(env.ENQUIRY_WEBHOOK_URL!, {
         method: 'POST',
         headers: { 'content-type': 'application/json', ...(env.ENQUIRY_WEBHOOK_SECRET ? { authorization: `Bearer ${env.ENQUIRY_WEBHOOK_SECRET}` } : {}) },
-        body: JSON.stringify({ type: 'orvel.stock_enquiry', ...e, receivedAt: new Date().toISOString() }),
+        body: JSON.stringify({ type: 'orvel.archive_enquiry', email, receivedAt: new Date().toISOString() }),
       });
       return res.ok ? 'ok' : 'failed';
     }
     case 'mock':
-      return e.label.toLowerCase().startsWith('fail') ? 'failed' : 'ok';
+      return email.startsWith('fail') ? 'failed' : 'ok';
     default:
       return 'failed';
   }
