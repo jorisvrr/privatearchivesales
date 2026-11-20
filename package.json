@@ -1,9 +1,9 @@
 {
-  "name": "orvel",
+  "name": "mino",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Orvel — Private archive sales",
+  "description": "Mino \u2014 Private archive sales",
   "scripts": {
     "dev": "node node_modules/vite/bin/vite.js",
     "build": "node node_modules/vite/bin/vite.js build",

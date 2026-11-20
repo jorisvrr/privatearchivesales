@@ -1,4 +1,4 @@
-// Orvel — app shell, router and page transitions (AUDIT.md §6).
+// Mino — app shell, router and page transitions (AUDIT.md §6).
 import '@fontsource-variable/geist';
 import '@fontsource-variable/newsreader/opsz.css';
 import './styles.css';
@@ -8,6 +8,7 @@ import { ArchivePage } from './pages/archive';
 import { aboutPage } from './pages/about';
 import { labelsPage } from './pages/labels';
 import { notFoundPage, piecePage } from './pages/piece';
+import { waitlistPage } from './pages/waitlist';
 import { parseRoute, type Page, type Route } from './pages/types';
 import { prefersReduced } from './ui/reveal';
 
@@ -21,7 +22,7 @@ let archive: ArchivePage | null = null;
 let current: Page | null = null;
 let running: { tween: gsap.core.Tween | null; finish: () => void } | null = null;
 
-const navName = (r: Route): NavName => (r.name === 'about' ? 'about' : r.name === 'labels' ? 'labels' : 'archive');
+const navName = (r: Route): NavName => (r.name === 'about' || r.name === 'waitlist' ? 'about' : r.name === 'labels' ? 'labels' : 'archive');
 
 function makePage(route: Route): Page {
   switch (route.name) {
@@ -33,6 +34,8 @@ function makePage(route: Route): Page {
       return labelsPage(route);
     case 'piece':
       return piecePage(route) ?? notFoundPage(route);
+    case 'waitlist':
+      return waitlistPage(route) ?? notFoundPage(route);
     default:
       return notFoundPage(route);
   }
@@ -86,8 +89,10 @@ async function go(href: string, kind: 'push' | 'pop' | 'initial') {
     return;
   }
 
-  const toDeeper = route.name === 'piece' && old!.route.name !== 'piece';
-  const fromDeeper = old!.route.name === 'piece' && route.name !== 'piece';
+  // Piece and drop pages sit a level deeper: they slide vertically.
+  const deep = (n: string) => n === 'piece' || n === 'waitlist';
+  const toDeeper = deep(route.name) && !deep(old!.route.name);
+  const fromDeeper = deep(old!.route.name) && !deep(route.name);
   const axis = toDeeper || fromDeeper ? 'y' : 'x';
   const forward = toDeeper ? true : fromDeeper ? false : (ORDER[route.name] ?? 0) >= (ORDER[old!.route.name] ?? 0);
 
@@ -144,8 +149,8 @@ async function boot() {
 
 // Read-only hooks for the test suite and verification sheets.
 declare global {
-  interface Window { __orvel: { nav: Nav; archive: () => ArchivePage | null; current: () => Page | null; running: () => boolean } }
+  interface Window { __mino: { nav: Nav; archive: () => ArchivePage | null; current: () => Page | null; running: () => boolean } }
 }
-window.__orvel = { nav, archive: () => archive, current: () => current, running: () => !!running };
+window.__mino = { nav, archive: () => archive, current: () => current, running: () => !!running };
 
 void boot();

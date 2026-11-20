@@ -1,5 +1,5 @@
 // Piece detail, in the reference's case template: header at y 200, image blocks, and a Details panel.
-import { EVENT_CREDIT, eventTitle, garmentBySlug, isDemo, labelName, platesFor, VIEW_NAMES } from '../content/sale';
+import { EVENT_CREDIT, eventTitle, garmentBySlug, isDemo, labelName, platesFor, VIEW_NAMES, waitlistHref } from '../content/sale';
 import { Panel } from '../ui/panel';
 import { revealIn } from '../ui/reveal';
 import { h, type EnterInfo, type Page, type Route } from './types';
@@ -38,7 +38,7 @@ export function piecePage(route: Route): Page | null {
       : [h('p', { class: 'panel__item', 'data-reveal': 'words' }, 'To be confirmed by the label')])),
     list('Availability',
       h('p', { class: 'panel__item', 'data-reveal': 'lines' }, 'Sold on the label’s own website while its archive is open.'),
-      h('p', { class: 'panel__item', 'data-reveal': 'block' }, h('a', { href: '/about', class: 'panel__link' }, 'Join the mailing list')),
+      waitlistHref() ? h('p', { class: 'panel__item', 'data-reveal': 'block' }, h('a', { href: waitlistHref()!, class: 'panel__link' }, isDemo() ? 'Preview the waitlist' : 'Join the waitlist')) : '',
     ),
   );
   const panel = new Panel({ id: 'details', label: 'Piece details', closedLabel: 'Details', body });
@@ -48,7 +48,7 @@ export function piecePage(route: Route): Page | null {
 
   return {
     route,
-    title: `${g.title} — ${labelName()} — Orvel`,
+    title: `${g.title} — ${labelName()} — Mino`,
     el,
     chrome,
     ready,
@@ -77,5 +77,5 @@ export function notFoundPage(route: Route): Page {
       ),
     ),
   );
-  return { route, title: 'Not found — Orvel', el, chrome: null, ready: Promise.resolve(), enter() {}, leave() {}, destroy() {}, focusTarget: () => el.querySelector('h1') };
+  return { route, title: 'Not found — Mino', el, chrome: null, ready: Promise.resolve(), enter() {}, leave() {}, destroy() {}, focusTarget: () => el.querySelector('h1') };
 }

@@ -10,9 +10,9 @@ test.describe('desktop 1440×900', () => {
     await page.goto('/');
     await expect(page.locator('.intro__logo')).toBeVisible();
     await expect(page.locator('.nav')).toBeHidden();
-    await expect(page.locator('.intro__word--l')).toHaveText('Orvel');
+    await expect(page.locator('.intro__word--l')).toHaveText('Mino');
     await expect(page.locator('.intro__word--r')).toHaveText('Private archive sales');
-    await page.waitForFunction(() => (window as any).__orvel.archive().scene.snapshot().planes.filter((p: any) => p.visible && p.opacity > 0.5).length === 10, null, { timeout: 15_000 });
+    await page.waitForFunction(() => (window as any).__mino.archive().scene.snapshot().planes.filter((p: any) => p.visible && p.opacity > 0.5).length === 10, null, { timeout: 15_000 });
     const ring = await snap(page);
     expect(ring.phase).toBe('ring');
     expect(ring.planes.filter((p) => p.visible).map((p) => p.i).sort((a, b) => a - b)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -21,13 +21,13 @@ test.describe('desktop 1440×900', () => {
     await page.mouse.move(900, 450, { steps: 5 });
     await page.mouse.up();
     expect((await snap(page)).ambient).toBe(true); // drag ignored during the intro
-    await page.waitForFunction(() => (window as any).__orvel.archive().scene.snapshot().phase === 'explode', null, { timeout: 15_000 });
+    await page.waitForFunction(() => (window as any).__mino.archive().scene.snapshot().phase === 'explode', null, { timeout: 15_000 });
     await expect(page.locator('.nav')).toBeVisible();
     await waitLive(page);
     const s = await snap(page);
     expect(s.planes.filter((p) => p.visible)).toHaveLength(18);
     await expect(page.locator('.title-row')).toContainText('Featured label — Archive Sale 001');
-    await expect(page.locator('.title-row')).toContainText('Organized by Orvel');
+    await expect(page.locator('.title-row')).toContainText('Organized by Mino');
     await expect(page.locator('.intro')).toHaveCount(0);
     await expectNoReferenceBranding(page);
   });
@@ -36,7 +36,7 @@ test.describe('desktop 1440×900', () => {
     await page.goto('/');
     for (const key of ['load1-1500', 'load1-6000'] as const) {
       const table = (placement as any)[key];
-      await page.waitForFunction((t) => ((window as any).__orvel.archive()?.scene?.snapshot().sinceExplode ?? 0) >= t, table.actualMs / 1000, { polling: 'raf', timeout: 30_000 });
+      await page.waitForFunction((t) => ((window as any).__mino.archive()?.scene?.snapshot().sinceExplode ?? 0) >= t, table.actualMs / 1000, { polling: 'raf', timeout: 30_000 });
       const s = await snap(page);
       for (const r of table.rows) {
         const m = s.planes[r.i];
@@ -50,7 +50,7 @@ test.describe('desktop 1440×900', () => {
   test('nav: wordmark and pills are measured and the group re-centres per route', async ({ page }) => {
     await page.goto('/about');
     await page.waitForTimeout(1400); // nav drop-in: 1.2 s power4.out
-    const measure = () => page.evaluate(() => (window as any).__orvel.nav.pillRects());
+    const measure = () => page.evaluate(() => (window as any).__mino.nav.pillRects());
     for (const [path, active] of [['/about', 1], ['/for-labels', 2], ['/', 0]] as const) {
       if (path !== '/about') { await page.locator(`.pill[href="${path}"]`).click(); await settled(page); await page.waitForTimeout(700); }
       const r = await measure();
@@ -75,12 +75,12 @@ test.describe('desktop 1440×900', () => {
     const t = await frontPlane(page);
     await page.mouse.move(t.cx, t.cy);
     await page.waitForTimeout(40);
-    await expect(page.locator('.title-row').last()).not.toContainText('Organized by Orvel', { timeout: 1000 });
+    await expect(page.locator('.title-row').last()).not.toContainText('Organized by Mino', { timeout: 1000 });
     const after = (await snap(page)).planes[t.i];
     expect(Math.abs(after.h - t.h)).toBeLessThan(0.5);
     expect(Math.hypot(after.cx - t.cx, after.cy - t.cy)).toBeLessThan(1);
     await page.mouse.move(60, 450);
-    await expect(page.locator('.title-row').last()).toContainText('Organized by Orvel');
+    await expect(page.locator('.title-row').last()).toContainText('Organized by Mino');
   });
 
   test('click expands to 472.5×630 centred; others vanish; cursor label; open slides up; Back keeps orientation', async ({ page }) => {

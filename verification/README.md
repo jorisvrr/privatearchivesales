@@ -1,8 +1,10 @@
-# Visual verification — Orvel vs. reference
+# Visual verification — Mino vs. reference
 
-Each sheet pairs a reference capture (left) with Orvel (right) at the same viewport, DPR and timestamp. Orvel frames come from a 60 fps CDP screencast; the intro is aligned on the reference's intro start (637 ms after navigation). Regenerate with `node scripts/verify-visual.mjs` (preview server on :4173) and `python3 scripts/compose-sheets.py`.
+> Sheets were recorded before the brand was renamed to Mino; the frames show the earlier wordmark.
 
-**Timing caveat:** screencast frames arrive a few frames (≈50–100 ms) after the state they show, so Orvel can look slightly *behind* in sheets. Timing was checked numerically in-page instead: the expanded plane is 533 px tall at +221 ms (audit: 491 px at +237 ms) and reaches 630 px by ≈620 ms (audit: 630 by +695 ms).
+Each sheet pairs a reference capture (left) with Mino (right) at the same viewport, DPR and timestamp. Mino frames come from a 60 fps CDP screencast; the intro is aligned on the reference's intro start (637 ms after navigation). Regenerate with `node scripts/verify-visual.mjs` (preview server on :4173) and `python3 scripts/compose-sheets.py`.
+
+**Timing caveat:** screencast frames arrive a few frames (≈50–100 ms) after the state they show, so Mino can look slightly *behind* in sheets. Timing was checked numerically in-page instead: the expanded plane is 533 px tall at +221 ms (audit: 491 px at +237 ms) and reaches 630 px by ≈620 ms (audit: 630 by +695 ms).
 
 | Sheet | Covers |
 |---|---|

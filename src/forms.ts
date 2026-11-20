@@ -1,8 +1,7 @@
-// Progressive enhancement for the two native forms. Without JavaScript they post directly to /api.
+// Progressive enhancement for the native forms. Without JavaScript they post directly to /api.
 // Success is shown only after the server confirms that the provider accepted the request (2xx).
 
-export type Outcome = 'ok' | 'duplicate' | 'invalid' | 'not_configured' | 'failed';
-export interface PostResult { outcome: Outcome; fields?: string[]; confirm?: boolean }
+export interface PostResult { ok: boolean; status: number; body: Record<string, unknown> }
 
 export async function post(url: string, data: Record<string, string>): Promise<PostResult> {
   try {
@@ -11,36 +10,19 @@ export async function post(url: string, data: Record<string, string>): Promise<P
       headers: { 'content-type': 'application/json', accept: 'application/json' },
       body: JSON.stringify(data),
     });
-    let body: { error?: string; fields?: string[]; confirm?: boolean } = {};
+    let body: Record<string, unknown> = {};
     try { body = await res.json(); } catch { /* not JSON */ }
-    if (res.ok) return { outcome: 'ok', confirm: body.confirm === true };
-    if (res.status === 409) return { outcome: 'duplicate' };
-    if (res.status === 422) return { outcome: 'invalid', fields: body.fields };
-    if (res.status === 503 && body.error === 'not_configured') return { outcome: 'not_configured' };
-    return { outcome: 'failed' };
+    return { ok: res.ok, status: res.status, body };
   } catch {
-    return { outcome: 'failed' };
+    return { ok: false, status: 0, body: { error: 'network' } };
   }
 }
 
-const EMAIL_INVALID = 'Enter a valid email address, like name@example.com.';
+export const EMAIL_INVALID = 'Enter a valid email address, like name@example.com.';
 
 export interface FieldCopy { missing: string; invalid?: string }
 
-export const SUBSCRIBE = {
-  busy: 'Joining…',
-  fields: { email: { missing: 'Enter your email address.', invalid: EMAIL_INVALID } } as Record<string, FieldCopy>,
-  alerts: {
-    duplicate: 'This address is already on Orvel’s list. We’ll email you when the next archive opens.',
-    not_configured: 'The mailing list isn’t open yet. Your address wasn’t saved. Please try again soon.',
-    failed: 'Your address wasn’t added. Please try again in a moment.',
-  },
-  success: { title: 'You’re on the list.', text: 'We’ll email you when the next archive opens.' },
-  /** When the provider sends a confirmation email first (double opt-in). */
-  confirm: { title: 'Check your email', text: 'Confirm your address from the email Orvel just sent. After that, we’ll email you when the next archive opens.' },
-};
-
-/** Archive-sale enquiries from founders: one work email, routed separately from the mailing list. */
+/** Archive-sale enquiries from founders: one work email, routed separately from the waitlist. */
 export const ENQUIRY = {
   busy: 'Sending…',
   fields: { email: { missing: 'Enter your work email.', invalid: EMAIL_INVALID } } as Record<string, FieldCopy>,
@@ -48,20 +30,28 @@ export const ENQUIRY = {
     not_configured: 'Enquiries can’t be sent from this page yet. Nothing was sent. Please try again soon.',
     failed: 'Your enquiry wasn’t sent. Please try again in a moment.',
   } as Record<string, string>,
-  success: 'Thanks. Orvel will follow up personally about stock, timing and terms.',
+  success: 'Thanks. Mino will follow up personally about stock, timing and terms.',
+};
+
+/** Per-drop waitlist. Round 1: verified past customers. Round 2: everyone else who signed up. */
+export const WAITLIST = {
+  busy: 'Joining…',
+  verified: 'Your order is verified. We’ll email you when first access opens.',
+  public: 'You’re on the waitlist. We’ll email you when the second round opens.',
+  confirm: 'Confirm your email address from the message Mino just sent.',
+  emailOnly: 'Join the second round with email only',
+  alerts: {
+    duplicate: 'This email is already on the waitlist. We’ll email you when the second round opens.',
+    no_match: 'We couldn’t match that order number to this email address. Check both, or join the second round with your email alone.',
+    unavailable: 'Order verification isn’t available right now. You can join the second round with your email alone.',
+    preview: 'This is a preview. Sign-ups open when the drop is confirmed.',
+    not_configured: 'The waitlist isn’t open yet. Your email wasn’t saved. Please try again soon.',
+    unknown_drop: 'This waitlist link isn’t active.',
+    failed: 'You weren’t added to the waitlist. Please try again in a moment.',
+  } as Record<string, string>,
 };
 
 type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-
-interface WireOptions {
-  endpoint: string;
-  busy: string;
-  fields: Record<string, FieldCopy>;
-  alerts: Record<string, string>;
-  onSuccess(r: PostResult): void;
-  /** Called after errors appear or clear, so the panel can re-measure. */
-  onChange?(): void;
-}
 
 function describedBy(el: Element, id: string, add: boolean) {
   const ids = new Set((el.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean));
@@ -71,11 +61,11 @@ function describedBy(el: Element, id: string, add: boolean) {
   else el.removeAttribute('aria-describedby');
 }
 
-export function wireForm(form: HTMLFormElement, o: WireOptions) {
+/** Field errors under each field (aria-describedby), and one alert slot for server errors. */
+export function formUI(form: HTMLFormElement, onChange?: () => void) {
   const alert = form.querySelector<HTMLElement>('[data-alert]')!;
   const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
   const control = (name: string) => form.elements.namedItem(name) as Control | null;
-
   const setError = (el: Control, msg: string) => {
     const id = `${el.id}-error`;
     let err = form.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
@@ -94,24 +84,35 @@ export function wireForm(form: HTMLFormElement, o: WireOptions) {
     el.removeAttribute('aria-invalid');
     describedBy(el, `${el.id}-error`, false);
   };
-  const say = (msg: string | null, kind: 'error' | 'info' = 'error') => {
+  /** Show a server message above the button, optionally with a secondary action. */
+  const say = (msg: string | null, kind: 'error' | 'info' = 'error', action?: { label: string; run: () => void }) => {
     alert.hidden = !msg;
-    alert.textContent = msg ?? '';
+    alert.replaceChildren();
+    if (msg) {
+      alert.append(document.createTextNode(msg));
+      if (action) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'fp-text-button';
+        b.textContent = action.label;
+        b.addEventListener('click', action.run);
+        alert.append(b);
+      }
+    }
     alert.dataset.kind = kind;
     alert.setAttribute('role', kind === 'error' ? 'alert' : 'status');
   };
-
-  form.addEventListener('input', (e) => {
-    const el = e.target as Control;
-    if (el.getAttribute('aria-invalid')) { clearError(el); o.onChange?.(); }
-  });
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (button.disabled) return;
-    say(null);
+  const busy = (on: boolean, label: string) => {
+    if (on) button.dataset.label = button.textContent ?? '';
+    button.disabled = on;
+    button.textContent = on ? label : button.dataset.label ?? '';
+    if (on) form.setAttribute('aria-busy', 'true');
+    else form.removeAttribute('aria-busy');
+  };
+  /** Validates the listed fields natively; shows errors, focuses the first invalid one. */
+  const validate = (fields: Record<string, FieldCopy>) => {
     const invalid: Control[] = [];
-    for (const [name, copy] of Object.entries(o.fields)) {
+    for (const [name, copy] of Object.entries(fields)) {
       const el = control(name);
       if (!el) continue;
       clearError(el);
@@ -120,31 +121,48 @@ export function wireForm(form: HTMLFormElement, o: WireOptions) {
         invalid.push(el);
       }
     }
-    if (invalid.length) {
-      o.onChange?.();
-      invalid[0].focus();
-      return;
-    }
+    if (invalid.length) { onChange?.(); invalid[0].focus(); }
+    return invalid.length === 0;
+  };
+  form.addEventListener('input', (e) => {
+    const el = e.target as Control;
+    if (el.getAttribute('aria-invalid')) { clearError(el); onChange?.(); }
+  });
+  return { alert, button, control, setError, clearError, say, busy, validate };
+}
+
+interface WireOptions {
+  endpoint: string;
+  busy: string;
+  fields: Record<string, FieldCopy>;
+  alerts: Record<string, string>;
+  onSuccess(r: PostResult): void;
+  onChange?(): void;
+}
+
+/** Simple one-shot form (the founder enquiry). */
+export function wireForm(form: HTMLFormElement, o: WireOptions) {
+  const ui = formUI(form, o.onChange);
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (ui.button.disabled) return;
+    ui.say(null);
+    if (!ui.validate(o.fields)) return;
     const data: Record<string, string> = {};
     new FormData(form).forEach((v, k) => { data[k] = String(v); });
-    const label = button.textContent;
-    button.disabled = true;
-    button.textContent = o.busy;
-    form.setAttribute('aria-busy', 'true');
-    o.onChange?.();
+    ui.busy(true, o.busy);
     const r = await post(o.endpoint, data);
-    button.disabled = false;
-    button.textContent = label;
-    form.removeAttribute('aria-busy');
-    if (r.outcome === 'ok') return o.onSuccess(r);
-    if (r.outcome === 'invalid') {
-      const bad = (r.fields ?? Object.keys(o.fields)).map(control).filter((x): x is Control => !!x);
-      bad.forEach((el) => setError(el, o.fields[el.name]?.invalid ?? o.fields[el.name]?.missing ?? 'Check this field.'));
-      o.onChange?.();
+    ui.busy(false, o.busy);
+    if (r.ok) return o.onSuccess(r);
+    if (r.status === 422) {
+      const names = (r.body.fields as string[] | undefined) ?? Object.keys(o.fields);
+      const bad = names.map(ui.control).filter((x): x is Control => !!x);
+      bad.forEach((el) => ui.setError(el, o.fields[el.name]?.invalid ?? o.fields[el.name]?.missing ?? 'Check this field.'));
       bad[0]?.focus();
       return;
     }
-    say(o.alerts[r.outcome] ?? o.alerts.failed, r.outcome === 'duplicate' ? 'info' : 'error');
+    const key = r.status === 503 && r.body.error === 'not_configured' ? 'not_configured' : 'failed';
+    ui.say(o.alerts[key] ?? o.alerts.failed);
     o.onChange?.();
   });
 }

@@ -61,8 +61,8 @@ export class Nav {
     this.logo = document.createElement('a');
     this.logo.className = 'logo';
     this.logo.href = '/';
-    this.logo.textContent = 'Orvel';
-    this.logo.setAttribute('aria-label', 'Orvel, Archive');
+    this.logo.textContent = 'Mino';
+    this.logo.setAttribute('aria-label', 'Mino, Archive');
     this.logo.addEventListener('click', (e) => {
       if (this.active === 'archive' && location.pathname === '/') e.preventDefault();
     });

@@ -1,4 +1,4 @@
-// Visual verification: records Orvel with a 60 fps CDP screencast (the same method as the audit) and pairs
+// Visual verification: records the Mino site with a 60 fps CDP screencast (the same method as the audit) and pairs
 // frames with the reference captures at matching viewports and timestamps.
 // Usage: start a preview server (see README), then: node scripts/verify-visual.mjs [baseURL]
 // Output: verification/frames/*.jpg and verification/pairs.json (composed by scripts/compose-sheets.py).
@@ -48,9 +48,9 @@ async function session(viewport, { touch = false, dpr = 1 } = {}) {
   const pair = (group, label, ref, t) => pairs.push({ group, label, ref: ref && `${REF}/${ref}`, mine: save(at(t), group), viewport: `${viewport.width}×${viewport.height}` });
   const lastInput = () => page.evaluate(() => window.__lastInput);
   const now = () => page.evaluate(() => performance.timeOrigin + performance.now());
-  const live = () => page.waitForFunction(() => window.__orvel?.archive()?.scene?.snapshot().phase === 'live', null, { timeout: 30000 });
+  const live = () => page.waitForFunction(() => window.__mino?.archive()?.scene?.snapshot().phase === 'live', null, { timeout: 30000 });
   const front = async () => {
-    const s = await page.evaluate(() => window.__orvel.archive().scene.snapshot());
+    const s = await page.evaluate(() => window.__mino.archive().scene.snapshot());
     return s.planes.filter((p) => p.visible).sort((a, b) => b.z - a.z)[0];
   };
   return { ctx, page, start, stop, at, pair, lastInput, now, live, front, wait: (ms) => page.waitForTimeout(ms) };
@@ -62,11 +62,11 @@ async function session(viewport, { touch = false, dpr = 1 } = {}) {
   await s.start();
   await s.page.goto(BASE + '/');
   await s.live();
-  await s.page.waitForFunction(() => window.__orvel.archive().scene.snapshot().sinceExplode > 6.2);
+  await s.page.waitForFunction(() => window.__mino.archive().scene.snapshot().sinceExplode > 6.2);
   await s.stop();
   const { introAt, explodeAt } = await s.page.evaluate(() => ({
-    introAt: performance.timeOrigin + window.__orvel.archive().introAt,
-    explodeAt: performance.timeOrigin + window.__orvel.archive().scene.explodeAt,
+    introAt: performance.timeOrigin + window.__mino.archive().introAt,
+    explodeAt: performance.timeOrigin + window.__mino.archive().scene.explodeAt,
   }));
   // The reference's intro canvas starts at 637 ms after navigation; align on that.
   for (const ms of [300, 640, 900, 1300, 1600, 2000, 2400, 2700, 3100, 3500, 4300, 4700, 5100, 5500, 5900, 6250, 6450, 6600, 6800, 7100, 7500]) {
@@ -174,9 +174,9 @@ async function session(viewport, { touch = false, dpr = 1 } = {}) {
   await s.start();
   await s.page.goto(BASE + '/');
   await s.live();
-  await s.page.waitForFunction(() => window.__orvel.archive().scene.snapshot().sinceExplode > 6.1);
-  const ex = await s.page.evaluate(() => performance.timeOrigin + window.__orvel.archive().scene.explodeAt);
-  const ia = await s.page.evaluate(() => performance.timeOrigin + window.__orvel.archive().introAt);
+  await s.page.waitForFunction(() => window.__mino.archive().scene.snapshot().sinceExplode > 6.1);
+  const ex = await s.page.evaluate(() => performance.timeOrigin + window.__mino.archive().scene.explodeAt);
+  const ia = await s.page.evaluate(() => performance.timeOrigin + window.__mino.archive().introAt);
   s.pair('1280', 'intro t = 2000 ms', 'desktop-1280/home-intro-2000ms.png', ia + 2000 - 637);
   s.pair('1280', 'settled (explode + 6 s)', 'desktop-1280/home-settled.png', ex + 6000);
   await s.page.goto(BASE + '/invitations');
@@ -192,9 +192,9 @@ for (const [dir, vp, dpr] of [['tablet-768', { width: 768, height: 1024 }, 2], [
   await s.start();
   await s.page.goto(BASE + '/');
   await s.live();
-  await s.page.waitForFunction(() => window.__orvel.archive().scene.snapshot().sinceExplode > 6.1);
-  const ex = await s.page.evaluate(() => performance.timeOrigin + window.__orvel.archive().scene.explodeAt);
-  const ia = await s.page.evaluate(() => performance.timeOrigin + window.__orvel.archive().introAt);
+  await s.page.waitForFunction(() => window.__mino.archive().scene.snapshot().sinceExplode > 6.1);
+  const ex = await s.page.evaluate(() => performance.timeOrigin + window.__mino.archive().scene.explodeAt);
+  const ia = await s.page.evaluate(() => performance.timeOrigin + window.__mino.archive().introAt);
   s.pair(dir, 'intro t = 2000 ms', `${dir}/home-intro-2000ms.png`, ia + 2000 - 637);
   s.pair(dir, 'settled', `${dir}/touch-00-settled.png`, ex + 6000);
   const t = await s.front();

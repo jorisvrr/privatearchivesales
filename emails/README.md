@@ -1,10 +1,10 @@
-# Invitation emails
+# Waitlist emails
 
-Each archive opens on the featured label's own website, for a limited sale window.
+Each archive sale (drop) has its own waitlist, behind one shareable link the label posts on its website. Every signup is one entry per email per drop, tagged in the waitlist provider:
 
-| Wave | Sent by | Through | Subject | Audience |
+| Round | Who | Tag | Template | Subject |
 |---|---|---|---|---|
-| First | The featured label | The label's own mailing system | The label's choice | The label's past customers |
-| Second | Orvel | Orvel's mailing list (`MAILING_PROVIDER`, tag `wave-2`) | **An invitation from Orvel** | Everyone who joined on /about |
+| 1 — first access | Signed up and verified a previous order (order number + checkout email) | `drop:<id>:round-1` | `first-access.html` | First access: the [Label] archive |
+| 2 — second round | Everyone else who signed up for that drop | `drop:<id>:round-2` | `second-round.html` | The [Label] archive is open |
 
-`second-invitation.html` is the template for the second wave. It is not sent automatically: send it as a campaign from the provider after the label's first wave, with the label's approval. Before launch it needs a real Orvel sender address on a verified domain.
+An entry that verifies after signing up publicly moves from round 2 to round 1 (the round-2 tag is removed), so it receives only the first-access email. Send each as a campaign to its tag segment, with the label's approval. Before launch, both need a real Mino sender address on a verified domain.

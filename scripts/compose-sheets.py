@@ -1,4 +1,4 @@
-"""Compose verification/pairs.json into side-by-side sheets: reference (left) | Orvel (right).
+"""Compose verification/pairs.json into side-by-side sheets: reference (left) | Mino (right).
 Usage: python3 scripts/compose-sheets.py"""
 import json
 from collections import OrderedDict
@@ -33,7 +33,7 @@ for name, items in groups.items():
         row.paste(mine.resize((w, H)), (w + 12, 30))
         d.rectangle((w, 0, w + 11, H + 30), fill=(255, 0, 255))
         d.text((6, 5), f"Reference · {p['label']}", fill='black', font=font)
-        d.text((w + 18, 5), f"Orvel · {p['label']}", fill='black', font=font)
+        d.text((w + 18, 5), f"Mino · {p['label']}", fill='black', font=font)
         rows.append(row)
     per = 2 if rows[0].width > 1200 else 4
     cols = min(per, len(rows))

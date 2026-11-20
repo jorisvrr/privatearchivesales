@@ -10,7 +10,7 @@ const plateHref = (p: Plate) => `/archive/${p.garment}`;
 
 export class ArchivePage implements Page {
   route: Route = { name: 'archive', path: '/' };
-  title = 'Orvel — Private archive sales';
+  title = 'Mino — Private archive sales';
   el: HTMLElement;
   chrome: HTMLElement;
   ready: Promise<void> = Promise.resolve();
@@ -164,11 +164,11 @@ export class ArchivePage implements Page {
   private playIntro() {
     const s = this.scene!;
     this.introAt = performance.now();
-    const letters = 'Orvel'.split('').map((c) => h('span', { class: 'mask' }, h('span', {}, c)));
+    const letters = 'Mino'.split('').map((c) => h('span', { class: 'mask' }, h('span', {}, c)));
     const logo = h('div', { class: 'intro__logo' }, ...letters);
     const num = h('span', {}, '001');
     const counter = h('div', { class: 'intro__counter' }, h('span', { class: 'mask' }, num));
-    const wl = h('div', { class: 'intro__word intro__word--l' }, h('span', { class: 'mask' }, h('span', { class: 't-sans' }, 'Orvel')));
+    const wl = h('div', { class: 'intro__word intro__word--l' }, h('span', { class: 'mask' }, h('span', { class: 't-sans' }, 'Mino')));
     const wr = h('div', { class: 'intro__word intro__word--r' }, h('span', { class: 'mask' }, h('span', { class: 't-serif' }, 'Private archive sales')));
     this.intro = h('div', { class: 'intro', 'aria-hidden': 'true' }, logo, counter, wl, wr);
     this.el.prepend(this.intro);

@@ -20,16 +20,16 @@ export function labelsPage(route: Route): Page {
   const scroll = h('div', { class: 'page__scroll' },
     h('header', { class: 'lede' },
       h('h1', { class: 'lede__title', tabindex: '-1', 'data-reveal': 'lines' }, 'Open your archive on your own site.'),
-      h('p', { class: 'lede__copy', 'data-reveal': 'lines' }, 'Give past collections and samples a dedicated sale on the website your customers already know. You choose the pieces and approve the prices. Orvel builds the page, coordinates the invitations, and removes the page when the drop ends.'),
-      h('p', { class: 'lede__price', 'data-reveal': 'lines' }, 'A small upfront fee covers setup. Orvel then earns a percentage of sales made through the archive event.'),
+      h('p', { class: 'lede__copy', 'data-reveal': 'lines' }, 'Mino builds the archive page on your website. You share one waitlist link, your verified customers shop first, and the rest of your waitlist follows.'),
+      h('p', { class: 'lede__price', 'data-reveal': 'lines' }, 'A small upfront fee covers setup. Mino then earns a percentage of sales made through the archive event.'),
       cta,
     ),
     h('section', { class: 'steps', 'aria-label': 'How an archive sale works' },
-      chapter('I', 'Step one', 'Select the archive', 'The label chooses the pieces, prices and sale window.'),
-      chapter('II', 'Step two', 'Open the page', 'Orvel builds a dedicated page on the label’s existing website. The label invites past customers first. Orvel’s mailing list receives the second invitation.'),
-      chapter('III', 'Step three', 'Close the sale', 'Once the drop ends, Orvel removes the dedicated page and reviews event sales with the label. The percentage applies only to sales attributable to that event.'),
+      chapter('I', 'Step one', 'Select the archive', 'You choose the pieces, prices and sale window.'),
+      chapter('II', 'Step two', 'Share one link', 'Mino builds the archive page on your website. You post one waitlist link, and anyone can sign up for the drop.'),
+      chapter('III', 'Step three', 'Open in two rounds', 'Customers who verify a previous order shop first. The rest of your waitlist follows. When the drop ends, Mino removes the page and reviews event sales with you. The percentage applies only to sales attributable to that event.'),
     ),
-    h('footer', { class: 'foot' }, 'Orvel — Private archive sales'),
+    h('footer', { class: 'foot' }, 'Mino — Private archive sales'),
   );
   const el = h('main', { class: 'page page--labels', id: 'main' }, scroll);
 
@@ -39,7 +39,7 @@ export function labelsPage(route: Route): Page {
       h('label', { for: 'enq-email', class: 'fp-label' }, 'Work email'),
       h('div', { class: 'fp-inline' },
         h('input', { id: 'enq-email', name: 'email', type: 'email', required: '', autocomplete: 'email', inputmode: 'email', spellcheck: 'false', class: 'fp-input' }),
-        h('button', { type: 'submit', class: 'fp-button' }, 'Contact Orvel'),
+        h('button', { type: 'submit', class: 'fp-button' }, 'Contact Mino'),
       ),
     ),
     h('input', { type: 'text', name: 'website', class: 'hp', tabindex: '-1', autocomplete: 'off', 'aria-hidden': 'true' }),
@@ -62,7 +62,7 @@ export function labelsPage(route: Route): Page {
 
   return {
     route,
-    title: 'For labels — Orvel',
+    title: 'For labels — Mino',
     el,
     chrome,
     ready: Promise.resolve(),

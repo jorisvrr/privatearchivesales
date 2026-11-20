@@ -9,10 +9,10 @@ export type Snap = {
   planes: { i: number; id: string; cx: number; cy: number; w: number; h: number; z: number; opacity: number; visible: boolean; layer: number }[];
 };
 
-export const snap = (p: Page): Promise<Snap> => p.evaluate(() => (window as any).__orvel.archive().scene.snapshot());
+export const snap = (p: Page): Promise<Snap> => p.evaluate(() => (window as any).__mino.archive().scene.snapshot());
 
 export async function waitLive(p: Page) {
-  await p.waitForFunction(() => (window as any).__orvel?.archive()?.scene?.snapshot().phase === 'live', null, { timeout: 30_000, polling: 100 });
+  await p.waitForFunction(() => (window as any).__mino?.archive()?.scene?.snapshot().phase === 'live', null, { timeout: 30_000, polling: 100 });
 }
 
 /** The nearest fully visible plane (front of the sphere). */
@@ -22,13 +22,13 @@ export async function frontPlane(p: Page) {
 }
 
 export async function settled(p: Page) {
-  await p.waitForFunction(() => !(window as any).__orvel.running(), null, { timeout: 10_000 });
+  await p.waitForFunction(() => !(window as any).__mino.running(), null, { timeout: 10_000 });
 }
 
 /** Angle between two quaternions, in radians. */
 export const quatAngle = (a: number[], b: number[]) => 2 * Math.acos(Math.min(1, Math.abs(a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3])));
 
-export const REFERENCE_WORDS = /Gionatan|Nese\b|GN \.D|GN\.D|Creative Space|Multi.?Disciplinary|Curated Selection|DashDigital|Yousuf|Soomro|Erica Basile|Ferrari|Tengile|Project Info/i;
+export const REFERENCE_WORDS = /Orvel|mailing list|Gionatan|Nese\b|GN \.D|GN\.D|Creative Space|Multi.?Disciplinary|Curated Selection|DashDigital|Yousuf|Soomro|Erica Basile|Ferrari|Tengile|Project Info/i;
 
 export async function expectNoReferenceBranding(p: Page) {
   const text = await p.evaluate(() => document.title + '\n' + document.body.innerText + '\n' + [...document.querySelectorAll('[aria-label],[alt],[title]')].map((e) => e.getAttribute('aria-label') + ' ' + e.getAttribute('alt') + ' ' + e.getAttribute('title')).join(' '));

@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Orvel — Private archive sales</title>
-    <meta name="description" content="Private archive sales for independent labels. Each archive opens on the label’s own website." />
+    <title>Mino — Private archive sales</title>
+    <meta name="description" content="Private archive sales for independent labels. Each label shares a waitlist link; verified past customers get first access." />
     <meta name="theme-color" content="#ffffff" />
-    <meta property="og:title" content="Orvel — Private archive sales" />
-    <meta property="og:description" content="Private archive sales for independent labels. Each archive opens on the label’s own website." />
+    <meta property="og:title" content="Mino — Private archive sales" />
+    <meta property="og:description" content="Private archive sales for independent labels. Each label shares a waitlist link; verified past customers get first access." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" as="image" href="/media/demo/01-jacket-full-s.jpg" />
   </head>
@@ -17,21 +17,29 @@
     <div id="chrome" class="chrome-root"></div>
     <noscript>
       <div class="noscript">
-        <p class="noscript__brand">Orvel <span>Private archive sales</span></p>
+        <p class="noscript__brand">Mino <span>Private archive sales</span></p>
         <h1>Private archive sales for independent labels.</h1>
-        <p>Orvel works with independent labels to bring past collections and samples back for a limited sale. Each archive opens on the label’s own website. The label invites its past customers first, then Orvel sends the second invitation to its mailing list.</p>
-        <form method="post" action="/api/subscribe">
+        <p>Mino helps independent labels open their archives for a limited time. Each label shares a waitlist link for its sale. Bought from the label before? Verify a previous order for first access. Everyone else on the waitlist receives the second invitation.</p>
+        <h2>Join the %MINO_LABEL% archive waitlist</h2>
+        <form method="post" action="/api/waitlist">
+          <input type="hidden" name="drop" value="%MINO_DROP_ID%" />
           <label for="ns-email">Email address</label>
           <input id="ns-email" name="email" type="email" required autocomplete="email" />
-          <button type="submit">Join the mailing list</button>
+          <details>
+            <summary>Bought from %MINO_LABEL% before? Get first access.</summary>
+            <label for="ns-order">Order number</label>
+            <input id="ns-order" name="order" aria-describedby="ns-order-help" />
+            <p id="ns-order-help">Use the email address from your original order.</p>
+          </details>
+          <button type="submit">Join the waitlist</button>
         </form>
         <h2>Open your archive on your own site.</h2>
-        <p>Give past collections and samples a dedicated sale on the website your customers already know. You choose the pieces and approve the prices. Orvel builds the page, coordinates the invitations, and removes the page when the drop ends.</p>
-        <p>A small upfront fee covers setup. Orvel then earns a percentage of sales made through the archive event.</p>
+        <p>Mino builds the archive page on your website. You share one waitlist link, your verified customers shop first, and the rest of your waitlist follows.</p>
+        <p>A small upfront fee covers setup. Mino then earns a percentage of sales made through the archive event.</p>
         <form method="post" action="/api/enquiry">
           <label for="ns-work">Work email</label>
           <input id="ns-work" name="email" type="email" required autocomplete="email" />
-          <button type="submit">Contact Orvel</button>
+          <button type="submit">Contact Mino</button>
         </form>
       </div>
     </noscript>

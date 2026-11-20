@@ -1,4 +1,4 @@
-// Form popup used by "Join the mailing list" (/about) and "Plan an archive sale" (/for-labels).
+// Form popup used by the drop waitlist (/waitlist/<drop>) and "Plan an archive sale" (/for-labels).
 // ≥641 px: a nonmodal card anchored top-left (role=dialog, aria-modal=false; no trap, no scroll lock).
 // ≤640 px: a modal bottom sheet (aria-modal=true; focus trapped, page inert, background scroll locked).
 // Escape and × close it; focus returns to whichever trigger opened it.

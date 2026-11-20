@@ -1,5 +1,7 @@
 # Popup redesign — "Join the invitation list" and "Tell us about your stock"
 
+> Historical report. The brand was later renamed to Mino, and the general mailing list was replaced by per-drop waitlists; screenshots show the earlier name.
+
 Screenshots: `before/` and `after/`, named `<device>-<popup>-<n>-<state>.png`. Devices are desktop (1440×900) and mobile (390×844, touch, 2×). States: 1 open, 2 keyboard open (mobile only), 3 validation error, 4 submitting, 5 success, 6 server error. Regenerate with `node scripts/capture-popups.mjs docs/popups/after` against a preview server on :4173.
 
 ## Results against the brief
@@ -20,7 +22,7 @@ Screenshots: `before/` and `after/`, named `<device>-<popup>-<n>-<state>.png`. D
 - **Header.** Newsreader 30 px / 1.1 title with a 14 px × (44 × 44 hit area, `aria-label="Close"`) on the same row. The "Close" row and the empty band are gone.
 - **Fields.** Geist labels above 44 px inputs: 1 px border at 50 % ink (≈3.5:1 against the card), white fill, and a 2 px ink focus ring with 2 px offset. The native select is restyled to match (`appearance: none`, same height, border, padding and font, custom chevron). One black 44 px button per form.
 - **Layout.** Invitation: email label, then input and "Join the list" on one row, then the privacy line, where the panel ends. Enquiry: Label name → Contact email → City + Approximate quantity side by side → "Note (optional)" as a 3-row textarea → Send enquiry.
-- **Copy.** The supporting sentences now use the brief's wording. Success: "You're on the list" / "Orvel will email you when booking opens."
+- **Copy.** The supporting sentences now use the brief's wording. Success: "You're on the list" / "Mino will email you when booking opens."
 - **Spacing tokens** in `:root`: `--fp-pad`, `--fp-gap-copy`, `--fp-gap-form`, `--fp-gap-foot`, `--fp-gap-field`, `--fp-gap-label`, `--fp-control`.
 
 ## Files touched
