@@ -1,0 +1,667 @@
+[
+ {
+  "group": "1440-intro",
+  "label": "t = 300 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t00300ms.jpg",
+  "mine": "frames/1440-intro-000.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 640 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t00640ms.jpg",
+  "mine": "frames/1440-intro-001.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 900 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t00900ms.jpg",
+  "mine": "frames/1440-intro-002.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 1300 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t01300ms.jpg",
+  "mine": "frames/1440-intro-003.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 1600 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t01600ms.jpg",
+  "mine": "frames/1440-intro-004.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 2000 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t02000ms.jpg",
+  "mine": "frames/1440-intro-005.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 2400 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t02400ms.jpg",
+  "mine": "frames/1440-intro-006.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 2700 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t02700ms.jpg",
+  "mine": "frames/1440-intro-007.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 3100 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t03100ms.jpg",
+  "mine": "frames/1440-intro-008.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 3500 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t03500ms.jpg",
+  "mine": "frames/1440-intro-009.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 4300 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t04300ms.jpg",
+  "mine": "frames/1440-intro-010.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 4700 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t04700ms.jpg",
+  "mine": "frames/1440-intro-011.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 5100 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t05100ms.jpg",
+  "mine": "frames/1440-intro-012.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 5500 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t05500ms.jpg",
+  "mine": "frames/1440-intro-013.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 5900 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t05900ms.jpg",
+  "mine": "frames/1440-intro-014.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 6250 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t06250ms.jpg",
+  "mine": "frames/1440-intro-015.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 6450 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t06450ms.jpg",
+  "mine": "frames/1440-intro-016.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 6600 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t06600ms.jpg",
+  "mine": "frames/1440-intro-017.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 6800 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t06800ms.jpg",
+  "mine": "frames/1440-intro-018.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 7100 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t07100ms.jpg",
+  "mine": "frames/1440-intro-019.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-intro",
+  "label": "t = 7500 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/intro-frames/t07500ms.jpg",
+  "mine": "frames/1440-intro-020.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-settled",
+  "label": "explode + 1.5 s",
+  "ref": "gionatan-nese/captures/desktop-1440/home/settled-explode+1500-load1.png",
+  "mine": "frames/1440-settled-021.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-settled",
+  "label": "explode + 6.0 s",
+  "ref": "gionatan-nese/captures/desktop-1440/home/settled-explode+6000-load1.png",
+  "mine": "frames/1440-settled-022.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-hover",
+  "label": "hover settled",
+  "ref": "gionatan-nese/captures/desktop-1440/home/hover-02-hover-settled.png",
+  "mine": "frames/1440-hover-000.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-expand",
+  "label": "expand + 100 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/expand-01-expand-100ms.png",
+  "mine": "frames/1440-expand-001.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-expand",
+  "label": "expand + 200 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/expand-01-expand-200ms.png",
+  "mine": "frames/1440-expand-002.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-expand",
+  "label": "expand + 400 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/expand-01-expand-400ms.png",
+  "mine": "frames/1440-expand-003.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-expand",
+  "label": "expanded, settled",
+  "ref": "gionatan-nese/captures/desktop-1440/home/expand-02-expanded-settled.png",
+  "mine": "frames/1440-expand-004.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-expand",
+  "label": "pointer off plane: “Close”",
+  "ref": "gionatan-nese/captures/desktop-1440/home/expand-03-pointer-off-plane.png",
+  "mine": "frames/1440-expand-005.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-expand",
+  "label": "pointer over title: label hidden",
+  "ref": "gionatan-nese/captures/desktop-1440/home/expand-04-pointer-over-title.png",
+  "mine": "frames/1440-expand-006.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-expand",
+  "label": "pointer on plane: “View”",
+  "ref": "gionatan-nese/captures/desktop-1440/home/expand-05-pointer-on-plane.png",
+  "mine": "frames/1440-expand-007.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-open",
+  "label": "open piece + 150 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/open-case-08-open-150ms.png",
+  "mine": "frames/1440-open-008.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-open",
+  "label": "open piece + 300 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/open-case-08-open-300ms.png",
+  "mine": "frames/1440-open-009.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-open",
+  "label": "open piece + 600 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/open-case-08-open-600ms.png",
+  "mine": "frames/1440-open-010.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-open",
+  "label": "open piece + 900 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/open-case-08-open-900ms.png",
+  "mine": "frames/1440-open-011.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-open",
+  "label": "open piece + 1200 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/open-case-08-open-1200ms.png",
+  "mine": "frames/1440-open-012.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-open",
+  "label": "open piece + 1600 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/open-case-08-open-1600ms.png",
+  "mine": "frames/1440-open-013.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-open",
+  "label": "piece settled",
+  "ref": "gionatan-nese/captures/desktop-1440/home/open-case-09-case-settled.png",
+  "mine": "frames/1440-open-014.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-open",
+  "label": "Back + 150 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/open-case-10-back-150ms.png",
+  "mine": "frames/1440-open-015.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-open",
+  "label": "Back, settled",
+  "ref": "gionatan-nese/captures/desktop-1440/home/open-case-11-back-settled.png",
+  "mine": "frames/1440-open-016.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-expand",
+  "label": "collapse + 200 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/home/expand-06-collapse-200ms.png",
+  "mine": "frames/1440-expand-017.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-expand",
+  "label": "collapsed",
+  "ref": "gionatan-nese/captures/desktop-1440/home/expand-07-collapsed.png",
+  "mine": "frames/1440-expand-018.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Archive → Invitations + 100 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/1-to-projects-0100ms.png",
+  "mine": "frames/1440-nav-000.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Archive → Invitations + 300 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/1-to-projects-0300ms.png",
+  "mine": "frames/1440-nav-001.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Archive → Invitations + 600 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/1-to-projects-0600ms.png",
+  "mine": "frames/1440-nav-002.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Archive → Invitations + 900 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/1-to-projects-0900ms.png",
+  "mine": "frames/1440-nav-003.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Archive → Invitations + 1300 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/1-to-projects-1300ms.png",
+  "mine": "frames/1440-nav-004.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Archive → Invitations, settled",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/1-to-projects-settled.png",
+  "mine": "frames/1440-nav-005.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Invitations → For labels + 100 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/2-to-about-0100ms.png",
+  "mine": "frames/1440-nav-006.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Invitations → For labels + 300 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/2-to-about-0300ms.png",
+  "mine": "frames/1440-nav-007.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Invitations → For labels + 600 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/2-to-about-0600ms.png",
+  "mine": "frames/1440-nav-008.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Invitations → For labels + 900 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/2-to-about-0900ms.png",
+  "mine": "frames/1440-nav-009.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Invitations → For labels + 1300 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/2-to-about-1300ms.png",
+  "mine": "frames/1440-nav-010.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Invitations → For labels, settled",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/2-to-about-settled.png",
+  "mine": "frames/1440-nav-011.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "For labels → Archive + 100 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/3-to-home-0100ms.png",
+  "mine": "frames/1440-nav-012.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "For labels → Archive + 300 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/3-to-home-0300ms.png",
+  "mine": "frames/1440-nav-013.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "For labels → Archive + 600 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/3-to-home-0600ms.png",
+  "mine": "frames/1440-nav-014.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "For labels → Archive + 900 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/3-to-home-0900ms.png",
+  "mine": "frames/1440-nav-015.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "For labels → Archive + 1300 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/3-to-home-1300ms.png",
+  "mine": "frames/1440-nav-016.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "For labels → Archive, settled",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/3-to-home-settled.png",
+  "mine": "frames/1440-nav-017.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-nav",
+  "label": "Back + 150 ms (instant)",
+  "ref": "gionatan-nese/captures/desktop-1440/nav/4-back-150ms.png",
+  "mine": "frames/1440-nav-018.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-panel",
+  "label": "Details + 200 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/projects/interact-11-info-200ms.png",
+  "mine": "frames/1440-panel-019.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-panel",
+  "label": "Details open",
+  "ref": "gionatan-nese/captures/desktop-1440/projects/interact-12-info-open.png",
+  "mine": "frames/1440-panel-020.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-panel",
+  "label": "Esc + 250 ms",
+  "ref": "gionatan-nese/captures/desktop-1440/projects/interact-13-info-esc-250ms.png",
+  "mine": "frames/1440-panel-021.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-panel",
+  "label": "Invitations (direct link)",
+  "ref": "gionatan-nese/captures/desktop-1440/projects/interact-12-info-open.png",
+  "mine": "frames/1440-panel-022.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1440-panel",
+  "label": "For labels",
+  "ref": "gionatan-nese/captures/desktop-1440/about/b-settled.png",
+  "mine": "frames/1440-panel-023.jpg",
+  "viewport": "1440×900"
+ },
+ {
+  "group": "1280",
+  "label": "intro t = 2000 ms",
+  "ref": "gionatan-nese/captures/desktop-1280/home-intro-2000ms.png",
+  "mine": "frames/1280-000.jpg",
+  "viewport": "1280×800"
+ },
+ {
+  "group": "1280",
+  "label": "settled (explode + 6 s)",
+  "ref": "gionatan-nese/captures/desktop-1280/home-settled.png",
+  "mine": "frames/1280-001.jpg",
+  "viewport": "1280×800"
+ },
+ {
+  "group": "1280",
+  "label": "Invitations",
+  "ref": "gionatan-nese/captures/desktop-1280/case-erica-basile-settled.png",
+  "mine": "frames/1280-002.jpg",
+  "viewport": "1280×800"
+ },
+ {
+  "group": "tablet-768",
+  "label": "intro t = 2000 ms",
+  "ref": "gionatan-nese/captures/tablet-768/home-intro-2000ms.png",
+  "mine": "frames/tablet-768-000.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "settled",
+  "ref": "gionatan-nese/captures/tablet-768/touch-00-settled.png",
+  "mine": "frames/tablet-768-001.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "tap + 250 ms",
+  "ref": "gionatan-nese/captures/tablet-768/touch-01-tap-250ms.png",
+  "mine": "frames/tablet-768-002.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "tap, expanded",
+  "ref": "gionatan-nese/captures/tablet-768/touch-02-tap-expanded.png",
+  "mine": "frames/tablet-768-003.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "View piece + 200 ms",
+  "ref": "gionatan-nese/captures/tablet-768/touch-03-viewcase-200ms.png",
+  "mine": "frames/tablet-768-004.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "View piece + 600 ms",
+  "ref": "gionatan-nese/captures/tablet-768/touch-03-viewcase-600ms.png",
+  "mine": "frames/tablet-768-005.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "View piece + 1000 ms",
+  "ref": "gionatan-nese/captures/tablet-768/touch-03-viewcase-1000ms.png",
+  "mine": "frames/tablet-768-006.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "piece",
+  "ref": "gionatan-nese/captures/tablet-768/touch-04-case.png",
+  "mine": "frames/tablet-768-007.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "Back",
+  "ref": "gionatan-nese/captures/tablet-768/touch-05-back.png",
+  "mine": "frames/tablet-768-008.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "swipe + 100 ms",
+  "ref": "gionatan-nese/captures/tablet-768/touch-06-swipe-100ms.png",
+  "mine": "frames/tablet-768-009.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "swipe + 2 s",
+  "ref": "gionatan-nese/captures/tablet-768/touch-07-swipe-2s.png",
+  "mine": "frames/tablet-768-010.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "Invitations sheet (direct link)",
+  "ref": "gionatan-nese/captures/tablet-768/case-erica-basile-settled.png",
+  "mine": "frames/tablet-768-011.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "tablet-768",
+  "label": "For labels",
+  "ref": "gionatan-nese/captures/tablet-768/about-settled.png",
+  "mine": "frames/tablet-768-012.jpg",
+  "viewport": "768×1024"
+ },
+ {
+  "group": "mobile-390",
+  "label": "intro t = 2000 ms",
+  "ref": "gionatan-nese/captures/mobile-390/home-intro-2000ms.png",
+  "mine": "frames/mobile-390-000.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "settled",
+  "ref": "gionatan-nese/captures/mobile-390/touch-00-settled.png",
+  "mine": "frames/mobile-390-001.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "tap + 250 ms",
+  "ref": "gionatan-nese/captures/mobile-390/touch-01-tap-250ms.png",
+  "mine": "frames/mobile-390-002.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "tap, expanded",
+  "ref": "gionatan-nese/captures/mobile-390/touch-02-tap-expanded.png",
+  "mine": "frames/mobile-390-003.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "View piece + 200 ms",
+  "ref": "gionatan-nese/captures/mobile-390/touch-03-viewcase-200ms.png",
+  "mine": "frames/mobile-390-004.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "View piece + 600 ms",
+  "ref": "gionatan-nese/captures/mobile-390/touch-03-viewcase-600ms.png",
+  "mine": "frames/mobile-390-005.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "View piece + 1000 ms",
+  "ref": "gionatan-nese/captures/mobile-390/touch-03-viewcase-1000ms.png",
+  "mine": "frames/mobile-390-006.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "piece",
+  "ref": "gionatan-nese/captures/mobile-390/touch-04-case.png",
+  "mine": "frames/mobile-390-007.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "Back",
+  "ref": "gionatan-nese/captures/mobile-390/touch-05-back.png",
+  "mine": "frames/mobile-390-008.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "swipe + 100 ms",
+  "ref": "gionatan-nese/captures/mobile-390/touch-06-swipe-100ms.png",
+  "mine": "frames/mobile-390-009.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "swipe + 2 s",
+  "ref": "gionatan-nese/captures/mobile-390/touch-07-swipe-2s.png",
+  "mine": "frames/mobile-390-010.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "Invitations sheet (direct link)",
+  "ref": "gionatan-nese/captures/mobile-390/case-erica-basile-settled.png",
+  "mine": "frames/mobile-390-011.jpg",
+  "viewport": "390×844"
+ },
+ {
+  "group": "mobile-390",
+  "label": "For labels",
+  "ref": "gionatan-nese/captures/mobile-390/about-settled.png",
+  "mine": "frames/mobile-390-012.jpg",
+  "viewport": "390×844"
+ }
+]

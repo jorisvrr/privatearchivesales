@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Orvel — Private archive sales</title>
+    <meta name="description" content="Orvel organizes private archive sales for independent fashion labels. Join the invitation list, or host a sale for your label." />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:title" content="Orvel — Private archive sales" />
+    <meta property="og:description" content="Private archive sales for independent fashion labels." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" as="image" href="/media/demo/01-jacket-full-s.jpg" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div id="pages" class="pages"></div>
+    <div id="chrome" class="chrome-root"></div>
+    <noscript>
+      <div class="noscript">
+        <p class="noscript__brand">Orvel <span>Private archive sales</span></p>
+        <h1>Join the invitation list</h1>
+        <p>Past customers of the featured label are invited first. Join Orvel’s list for the second invitation.</p>
+        <form method="post" action="/api/subscribe">
+          <label for="ns-email">Email address</label>
+          <input id="ns-email" name="email" type="email" required autocomplete="email" />
+          <button type="submit">Join the list</button>
+        </form>
+        <h2>Host a private archive sale.</h2>
+        <p>You choose the pieces and approve the prices. Orvel organizes the invitations, bookings, and event.</p>
+        <form method="post" action="/api/enquiry">
+          <label for="ns-label">Label name</label><input id="ns-label" name="label" required />
+          <label for="ns-cemail">Contact email</label><input id="ns-cemail" name="email" type="email" required />
+          <label for="ns-city">City</label><input id="ns-city" name="city" required />
+          <label for="ns-qty">Approximate quantity</label>
+          <select id="ns-qty" name="quantity" required><option value="">Choose a range</option><option>Fewer than 50 pieces</option><option>50 to 150 pieces</option><option>150 to 400 pieces</option><option>More than 400 pieces</option></select>
+          <label for="ns-note">Note (optional)</label><textarea id="ns-note" name="note" rows="3"></textarea>
+          <button type="submit">Tell us about your stock</button>
+        </form>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

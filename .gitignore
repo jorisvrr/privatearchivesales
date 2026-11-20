@@ -1,0 +1,12 @@
+node_modules
+dist
+.cache
+.env*
+!.env.example
+test-results
+playwright-report
+.vercel
+.DS_Store
+
+# Reference audit captures (140 MB), kept out of git
+gionatan-nese/
