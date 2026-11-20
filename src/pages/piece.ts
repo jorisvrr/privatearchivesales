@@ -1,4 +1,5 @@
 // Piece detail, in the reference's case template: header at y 200, image blocks, and a Details panel.
+import { pageTitle } from '../config/brand';
 import { EVENT_CREDIT, eventTitle, garmentBySlug, isDemo, labelName, platesFor, VIEW_NAMES, waitlistHref } from '../content/sale';
 import { Panel } from '../ui/panel';
 import { revealIn } from '../ui/reveal';
@@ -48,7 +49,7 @@ export function piecePage(route: Route): Page | null {
 
   return {
     route,
-    title: `${g.title} — ${labelName()} — Mino`,
+    title: pageTitle(`${g.title} — ${labelName()}`),
     el,
     chrome,
     ready,
@@ -77,5 +78,5 @@ export function notFoundPage(route: Route): Page {
       ),
     ),
   );
-  return { route, title: 'Not found — Mino', el, chrome: null, ready: Promise.resolve(), enter() {}, leave() {}, destroy() {}, focusTarget: () => el.querySelector('h1') };
+  return { route, title: pageTitle('Not found'), el, chrome: null, ready: Promise.resolve(), enter() {}, leave() {}, destroy() {}, focusTarget: () => el.querySelector('h1') };
 }

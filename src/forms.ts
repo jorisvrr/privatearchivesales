@@ -1,5 +1,6 @@
 // Progressive enhancement for the native forms. Without JavaScript they post directly to /api.
 // Success is shown only after the server confirms that the provider accepted the request (2xx).
+import { name } from './config/brand';
 
 export interface PostResult { ok: boolean; status: number; body: Record<string, unknown> }
 
@@ -30,7 +31,7 @@ export const ENQUIRY = {
     not_configured: 'Enquiries can’t be sent from this page yet. Nothing was sent. Please try again soon.',
     failed: 'Your enquiry wasn’t sent. Please try again in a moment.',
   } as Record<string, string>,
-  success: 'Thanks. Mino will follow up personally about stock, timing and terms.',
+  success: `Thanks. ${name} will follow up personally about stock, timing and terms.`,
 };
 
 /** Per-drop waitlist. Round 1: verified past customers. Round 2: everyone else who signed up. */
@@ -38,7 +39,7 @@ export const WAITLIST = {
   busy: 'Joining…',
   verified: 'Your order is verified. We’ll email you when first access opens.',
   public: 'You’re on the waitlist. We’ll email you when the second round opens.',
-  confirm: 'Confirm your email address from the message Mino just sent.',
+  confirm: `Confirm your email address from the message ${name} just sent.`,
   emailOnly: 'Join the second round with email only',
   alerts: {
     duplicate: 'This email is already on the waitlist. We’ll email you when the second round opens.',

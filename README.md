@@ -16,6 +16,10 @@ Mino builds the archive page on a label's website. The label shares one waitlist
 - If the order doesn't match, the visitor can correct the details or join round 2 with email only. If verification is unavailable, they get the same round-2 option, and never a verified confirmation.
 - Emails: `emails/first-access.html` (round 1) and `emails/second-round.html` (round 2); see `emails/README.md`.
 
+## Brand
+
+The name lives in one place: `src/config/brand.ts` (`name`, `descriptor`, `siteTitle`, `eventCredit`, `pageTitle()`). The wordmark, page titles, metadata and Open Graph (via `vite.config.ts`), form copy, confirmations, server answer pages and email templates (`node scripts/render-emails.mjs`) all read from it; `tests/unit/brand.test.ts` fails if the name is hardcoded anywhere else. Manual swap when the name changes: `public/favicon.svg` (a drawn letter). `node scripts/check-nav-brand.mjs "<longer name>"` checks the centred nav with other names.
+
 ## Run
 
 The folder name contains `::`, which breaks `npm run` on this machine, so call the tools directly:

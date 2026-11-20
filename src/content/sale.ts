@@ -125,9 +125,7 @@ export function waitlistHref(): string | null {
 export const isDemo = () => sale.status === 'demo';
 export const labelName = () => sale.label ?? 'Featured label';
 export const eventTitle = () => `${labelName()} — Archive Sale ${sale.number}`;
-export const BRAND = 'Mino';
-export const EVENT_CREDIT = 'Organized by Mino';
-export const SITE_TITLE = 'Mino — Private archive sales';
+export { name as BRAND, eventCredit as EVENT_CREDIT, siteTitle as SITE_TITLE } from '../config/brand.ts';
 export const garmentBySlug = (slug: string) => sale.garments.find((g) => g.slug === slug) ?? null;
 export const platesFor = (slug: string) => sale.plates.filter((p) => p.garment === slug);
 export const garmentOf = (plate: Plate) => garmentBySlug(plate.garment)!;

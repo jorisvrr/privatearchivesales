@@ -1,9 +1,10 @@
 <!--
-  Mino — round 1: first access for verified past customers of the featured label.
+  Template: render with  node scripts/render-emails.mjs  (fills {{name}} and {{eventCredit}} from src/config/brand.ts).
+  {{name}} — round 1: first access for verified past customers of the featured label.
   Audience: the drop's waitlist entries tagged  drop:<drop-id>:round-1  (order number + checkout email verified).
   Subject: First access: the [Label] archive
   Send when the archive page opens, before the second round. Replace every [bracketed] value with supplied information.
-  The sender must be a real Mino address on a verified domain; none exists yet.
+  The sender must be a real {{name}} address on a verified domain; none exists yet.
 -->
 <!doctype html>
 <html lang="en">
@@ -17,9 +18,9 @@
       <tr>
         <td align="center" style="padding:48px 16px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:470px;">
-            <tr><td style="font:600 14px/20px Arial,Helvetica,sans-serif;padding-bottom:56px;">Mino</td></tr>
+            <tr><td style="font:600 14px/20px Arial,Helvetica,sans-serif;padding-bottom:56px;">{{name}}</td></tr>
             <tr><td style="font:500 16px/18px Arial,Helvetica,sans-serif;">[Label] — Archive Sale [001]</td></tr>
-            <tr><td style="font:400 17px/20px Georgia,'Times New Roman',serif;padding-top:10px;">Organized by Mino</td></tr>
+            <tr><td style="font:400 17px/20px Georgia,'Times New Roman',serif;padding-top:10px;">{{eventCredit}}</td></tr>
             <tr>
               <td style="font:400 16px/25.6px Georgia,'Times New Roman',serif;padding-top:40px;">
                 Your order is verified, so you get first access. The [Label] archive is open to you now on [Label]’s website, before the rest of the waitlist.

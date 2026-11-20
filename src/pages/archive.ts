@@ -1,5 +1,6 @@
 // Archive: the signature sphere (AUDIT.md §3) plus its DOM overlays.
 import { gsap } from 'gsap';
+import { descriptor, name as brandName, siteTitle } from '../config/brand';
 import { EVENT_CREDIT, eventTitle, garmentOf, isDemo, plateSubtitle, sale, VIEW_NAMES, type Plate } from '../content/sale';
 import type { Nav } from '../nav';
 import { SphereScene, webglAvailable } from '../scene/sphere';
@@ -10,7 +11,7 @@ const plateHref = (p: Plate) => `/archive/${p.garment}`;
 
 export class ArchivePage implements Page {
   route: Route = { name: 'archive', path: '/' };
-  title = 'Mino — Private archive sales';
+  title = siteTitle;
   el: HTMLElement;
   chrome: HTMLElement;
   ready: Promise<void> = Promise.resolve();
@@ -164,12 +165,12 @@ export class ArchivePage implements Page {
   private playIntro() {
     const s = this.scene!;
     this.introAt = performance.now();
-    const letters = 'Mino'.split('').map((c) => h('span', { class: 'mask' }, h('span', {}, c)));
+    const letters = brandName.split('').map((c) => h('span', { class: 'mask' }, h('span', {}, c)));
     const logo = h('div', { class: 'intro__logo' }, ...letters);
     const num = h('span', {}, '001');
     const counter = h('div', { class: 'intro__counter' }, h('span', { class: 'mask' }, num));
-    const wl = h('div', { class: 'intro__word intro__word--l' }, h('span', { class: 'mask' }, h('span', { class: 't-sans' }, 'Mino')));
-    const wr = h('div', { class: 'intro__word intro__word--r' }, h('span', { class: 'mask' }, h('span', { class: 't-serif' }, 'Private archive sales')));
+    const wl = h('div', { class: 'intro__word intro__word--l' }, h('span', { class: 'mask' }, h('span', { class: 't-sans' }, brandName)));
+    const wr = h('div', { class: 'intro__word intro__word--r' }, h('span', { class: 'mask' }, h('span', { class: 't-serif' }, descriptor)));
     this.intro = h('div', { class: 'intro', 'aria-hidden': 'true' }, logo, counter, wl, wr);
     this.el.prepend(this.intro);
 

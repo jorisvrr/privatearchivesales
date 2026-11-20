@@ -3,10 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Mino — Private archive sales</title>
+    <title>%BRAND_SITE_TITLE%</title>
     <meta name="description" content="Private archive sales for independent labels. Each label shares a waitlist link; verified past customers get first access." />
     <meta name="theme-color" content="#ffffff" />
-    <meta property="og:title" content="Mino — Private archive sales" />
+    <meta name="application-name" content="%BRAND_NAME%" />
+    <meta property="og:title" content="%BRAND_SITE_TITLE%" />
+    <meta property="og:site_name" content="%BRAND_NAME%" />
     <meta property="og:description" content="Private archive sales for independent labels. Each label shares a waitlist link; verified past customers get first access." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" as="image" href="/media/demo/01-jacket-full-s.jpg" />
@@ -17,9 +19,9 @@
     <div id="chrome" class="chrome-root"></div>
     <noscript>
       <div class="noscript">
-        <p class="noscript__brand">Mino <span>Private archive sales</span></p>
+        <p class="noscript__brand">%BRAND_NAME% <span>%BRAND_DESCRIPTOR%</span></p>
         <h1>Private archive sales for independent labels.</h1>
-        <p>Mino helps independent labels open their archives for a limited time. Each label shares a waitlist link for its sale. Bought from the label before? Verify a previous order for first access. Everyone else on the waitlist receives the second invitation.</p>
+        <p>%BRAND_NAME% helps independent labels open their archives for a limited time. Each label shares a waitlist link for its sale. Bought from the label before? Verify a previous order for first access. Everyone else on the waitlist receives the second invitation.</p>
         <h2>Join the %MINO_LABEL% archive waitlist</h2>
         <form method="post" action="/api/waitlist">
           <input type="hidden" name="drop" value="%MINO_DROP_ID%" />
@@ -34,12 +36,12 @@
           <button type="submit">Join the waitlist</button>
         </form>
         <h2>Open your archive on your own site.</h2>
-        <p>Mino builds the archive page on your website. You share one waitlist link, your verified customers shop first, and the rest of your waitlist follows.</p>
-        <p>A small upfront fee covers setup. Mino then earns a percentage of sales made through the archive event.</p>
+        <p>%BRAND_NAME% builds the archive page on your website. You share one waitlist link, your verified customers shop first, and the rest of your waitlist follows.</p>
+        <p>A small upfront fee covers setup. %BRAND_NAME% then earns a percentage of sales made through the archive event.</p>
         <form method="post" action="/api/enquiry">
           <label for="ns-work">Work email</label>
           <input id="ns-work" name="email" type="email" required autocomplete="email" />
-          <button type="submit">Contact Mino</button>
+          <button type="submit">Contact %BRAND_NAME%</button>
         </form>
       </div>
     </noscript>

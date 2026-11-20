@@ -1,4 +1,5 @@
 // Shared request/response helpers for the form endpoints (Web-standard Request → Response).
+import { name, siteTitle } from '../src/config/brand.ts';
 
 export type Env = Record<string, string | undefined>;
 export type Fetch = typeof fetch;
@@ -32,8 +33,8 @@ export function json(status: number, body: unknown): Response {
 /** No-JavaScript fallback: a minimal page with the outcome and a link back. */
 export function htmlPage(status: number, message: string, back: string): Response {
   const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
-  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mino — Private archive sales</title>
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(siteTitle)}</title>
 <style>body{margin:0;font:400 17px/1.45 Georgia,serif;color:#000;background:#fff}main{max-width:460px;margin:22vh auto 0;padding:0 16px}p.b{font:500 14px Arial,sans-serif;margin-bottom:40px}a{font:500 13px Arial,sans-serif;color:#000}</style></head>
-<body><main><p class="b">Mino</p><p role="status">${esc(message)}</p><p><a href="${esc(back)}">Back</a></p></main></body></html>`;
+<body><main><p class="b">${esc(name)}</p><p role="status">${esc(message)}</p><p><a href="${esc(back)}">Back</a></p></main></body></html>`;
   return new Response(html, { status, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });
 }

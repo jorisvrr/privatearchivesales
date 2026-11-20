@@ -1,6 +1,7 @@
 // Centred navigation (AUDIT.md §2.1–2.2): wordmark placeholder + three pills.
 // Label widths are measured from the rendered fonts, so the group re-centres for any wording.
 import { gsap } from 'gsap';
+import { name as brandName } from './config/brand';
 import { isDemo } from './content/sale';
 import { prefersReduced } from './ui/reveal';
 
@@ -61,8 +62,8 @@ export class Nav {
     this.logo = document.createElement('a');
     this.logo.className = 'logo';
     this.logo.href = '/';
-    this.logo.textContent = 'Mino';
-    this.logo.setAttribute('aria-label', 'Mino, Archive');
+    this.logo.textContent = brandName;
+    this.logo.setAttribute('aria-label', `${brandName}, Archive`);
     this.logo.addEventListener('click', (e) => {
       if (this.active === 'archive' && location.pathname === '/') e.preventDefault();
     });

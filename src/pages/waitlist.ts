@@ -1,4 +1,5 @@
 // Drop page: the waitlist for one archive sale. This is the page behind the label's shareable link.
+import { pageTitle } from '../config/brand';
 import { dropById, EVENT_CREDIT, eventTitle } from '../content/sale';
 import { FormPanel } from '../ui/form-panel';
 import { revealIn } from '../ui/reveal';
@@ -52,7 +53,7 @@ export function waitlistPage(route: Route): Page | null {
 
   return {
     route,
-    title: `Join the ${label} archive waitlist — Mino`,
+    title: pageTitle(`Join the ${label} archive waitlist`),
     el,
     chrome,
     ready: Promise.resolve(),

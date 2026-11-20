@@ -1,11 +1,12 @@
 // Archive-sale enquiries from founders: POST /api/enquiry { email }. Routed separately from the waitlist.
 // ENQUIRY_PROVIDER=resend   RESEND_API_KEY, ENQUIRY_TO, ENQUIRY_FROM (a sender on a domain verified in Resend)
 // ENQUIRY_PROVIDER=webhook  ENQUIRY_WEBHOOK_URL [ENQUIRY_WEBHOOK_SECRET]
+import { name } from '../src/config/brand.ts';
 import { clean, htmlPage, isEmail, json, methodNotAllowed, mockAllowed, readBody, type Env, type Fetch } from './http.ts';
 
 type Result = 'ok' | 'invalid' | 'not_configured' | 'failed';
 const MESSAGES: Record<Result, string> = {
-  ok: 'Thanks. Mino will follow up personally about stock, timing and terms.',
+  ok: `Thanks. ${name} will follow up personally about stock, timing and terms.`,
   invalid: 'Enter a valid work email, like name@label.com.',
   not_configured: 'Enquiries can’t be sent from this page yet. Nothing was sent.',
   failed: 'Your enquiry wasn’t sent. Please try again in a moment.',
@@ -27,7 +28,7 @@ export function enquiryConfigured(env: Env): string[] {
 }
 
 export function enquiryText(email: string) {
-  return ['New archive-sale enquiry for Mino', '', `Work email: ${email}`, '', 'Next step: reply personally about stock, timing and terms.'].join('\n');
+  return [`New archive-sale enquiry for ${name}`, '', `Work email: ${email}`, '', 'Next step: reply personally about stock, timing and terms.'].join('\n');
 }
 
 export async function handleEnquiry(req: Request, env: Env, f: Fetch = fetch): Promise<Response> {
