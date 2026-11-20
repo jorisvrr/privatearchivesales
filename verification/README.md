@@ -2,7 +2,7 @@
 
 > Sheets were recorded before the brand was renamed to Mino; the frames show the earlier wordmark.
 
-Each sheet pairs a reference capture (left) with Mino (right) at the same viewport, DPR and timestamp. Mino frames come from a 60 fps CDP screencast; the intro is aligned on the reference's intro start (637 ms after navigation). Regenerate with `node scripts/verify-visual.mjs` (preview server on :4173) and `python3 scripts/compose-sheets.py`.
+Each sheet pairs a reference capture (left) with Mino (right) at the same viewport, DPR and timestamp. Mino frames come from a 60 fps CDP screencast; the intro is aligned on the reference's intro start (637 ms after navigation). The composed sheets (`verification/*.jpg`) are **not in the repository**: they contain screenshots of the reference site, which aren't ours to publish. Only our own frames (`verification/frames/`) and `pairs.json` are committed. Regenerate the sheets locally with `node scripts/verify-visual.mjs` (preview server on :4173) and `python3 scripts/compose-sheets.py`.
 
 **Timing caveat:** screencast frames arrive a few frames (≈50–100 ms) after the state they show, so Mino can look slightly *behind* in sheets. Timing was checked numerically in-page instead: the expanded plane is 533 px tall at +221 ms (audit: 491 px at +237 ms) and reaches 630 px by ≈620 ms (audit: 630 by +695 ms).
 

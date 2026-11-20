@@ -11,3 +11,6 @@ playwright-report
 # Reference audit captures (140 MB), kept out of git
 gionatan-nese/
 label-site/waitlist/emails/rendered/
+
+# Side-by-side sheets include screenshots of the reference site: local only, never published
+verification/*.jpg
