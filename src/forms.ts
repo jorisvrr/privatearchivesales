@@ -23,7 +23,7 @@ export const EMAIL_INVALID = 'Enter a valid email address, like name@example.com
 
 export interface FieldCopy { missing: string; invalid?: string }
 
-/** Archive-sale enquiries from founders: one work email, routed separately from the waitlist. */
+/** Archive-sale enquiries from founders: one work email. A business enquiry only — never a drop signup. */
 export const ENQUIRY = {
   busy: 'Sending…',
   fields: { email: { missing: 'Enter your work email.', invalid: EMAIL_INVALID } } as Record<string, FieldCopy>,
@@ -32,24 +32,6 @@ export const ENQUIRY = {
     failed: 'Your enquiry wasn’t sent. Please try again in a moment.',
   } as Record<string, string>,
   success: `Thanks. ${name} will follow up personally about stock, timing and terms.`,
-};
-
-/** Per-drop waitlist. Round 1: verified past customers. Round 2: everyone else who signed up. */
-export const WAITLIST = {
-  busy: 'Joining…',
-  verified: 'Your order is verified. We’ll email you when first access opens.',
-  public: 'You’re on the waitlist. We’ll email you when the second round opens.',
-  confirm: `Confirm your email address from the message ${name} just sent.`,
-  emailOnly: 'Join the second round with email only',
-  alerts: {
-    duplicate: 'This email is already on the waitlist. We’ll email you when the second round opens.',
-    no_match: 'We couldn’t match that order number to this email address. Check both, or join the second round with your email alone.',
-    unavailable: 'Order verification isn’t available right now. You can join the second round with your email alone.',
-    preview: 'This is a preview. Sign-ups open when the drop is confirmed.',
-    not_configured: 'The waitlist isn’t open yet. Your email wasn’t saved. Please try again soon.',
-    unknown_drop: 'This waitlist link isn’t active.',
-    failed: 'You weren’t added to the waitlist. Please try again in a moment.',
-  } as Record<string, string>,
 };
 
 type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;

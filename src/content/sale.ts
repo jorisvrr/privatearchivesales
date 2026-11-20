@@ -27,20 +27,8 @@ export interface Plate {
   alt: string;
 }
 
-/** How a drop checks that someone bought from the label before (order number + checkout email). */
-export type OrderVerification = 'shopify' | 'webhook' | null;
-
-export interface Drop {
-  /** Stable id used in the waitlist link and in every waitlist entry, e.g. "studio-name-archive-001". */
-  id: string;
-  /** Where the label posts the waitlist: the archive page Mino builds on the label's own website. Null until it exists. */
-  waitlistUrl: string | null;
-  /** Order-record source for first access. Null until the label's store is connected. */
-  verification: OrderVerification;
-}
-
 export interface Sale {
-  /** "demo": preview content. "confirmed": a label confirmed the drop. "none": no drop is confirmed right now. */
+  /** "demo": preview content. "confirmed": a label confirmed the sale. "none": no sale is confirmed right now. */
   status: 'demo' | 'confirmed' | 'none';
   number: string;
   /** Featured label name, e.g. "Studio Name". Null until a partner is confirmed. */
@@ -49,7 +37,6 @@ export interface Sale {
   date: string | null;
   garments: Garment[];
   plates: Plate[];
-  drop: Drop;
 }
 
 export const VIEW_NAMES: Record<View, string> = {
@@ -105,22 +92,7 @@ export const sale: Sale = {
   date: null,
   garments,
   plates,
-  drop: { id: 'demo-archive-001', waitlistUrl: null, verification: null },
 };
-
-/** Every drop the waitlist API accepts. One per sale; add confirmed drops here. */
-export const drops = (): (Drop & { label: string; status: Sale['status'] })[] => [{ ...sale.drop, label: labelName(), status: sale.status }];
-export const dropById = (id: string) => drops().find((d) => d.id === id) ?? null;
-
-/**
- * Where "Join the waitlist" points. Confirmed drop: the label's own waitlist link.
- * Demo: Mino's preview of the drop page. No confirmed drop: null (show "The next waitlist link will be shared here.").
- */
-export function waitlistHref(): string | null {
-  if (sale.status === 'confirmed') return sale.drop.waitlistUrl;
-  if (sale.status === 'demo') return `/waitlist/${sale.drop.id}`;
-  return null;
-}
 
 export const isDemo = () => sale.status === 'demo';
 export const labelName = () => sale.label ?? 'Featured label';

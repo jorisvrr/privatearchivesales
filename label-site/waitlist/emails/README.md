@@ -1,6 +1,6 @@
-# Waitlist emails
+# Label-site waitlist emails
 
-Each archive sale (drop) has its own waitlist, behind one shareable link the label posts on its website. Every signup is one entry per email per drop, tagged in the waitlist provider:
+For the label-site waitlist kit (not Mino's public site). Each drop has its own waitlist, behind the link the label posts on its own website. Every signup is one entry per email per drop, tagged in the waitlist provider:
 
 | Round | Who | Tag | Template | Subject |
 |---|---|---|---|---|

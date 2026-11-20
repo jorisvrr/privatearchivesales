@@ -1,4 +1,4 @@
-export type RouteName = 'archive' | 'about' | 'labels' | 'piece' | 'waitlist' | 'notfound';
+export type RouteName = 'archive' | 'about' | 'labels' | 'piece' | 'notfound';
 
 export interface Route {
   name: RouteName;
@@ -33,14 +33,16 @@ export interface Page {
   focusTarget(): HTMLElement | null;
 }
 
+/** Mino's site takes no shopper signups; these old URLs all land on /about. */
+export const isRetiredSignupPath = (path: string) => /^\/(invitations|waitlist)(\/.*)?$/.test(path.replace(/\/+$/, '') || '/');
+
 export function parseRoute(pathname: string): Route {
   const path = pathname.replace(/\/+$/, '') || '/';
   if (path === '/' || path === '/archive') return { name: 'archive', path: '/' };
-  // /invitations moved to /about (permanent redirect on the server; mirrored here for in-app links).
-  if (path === '/about' || path === '/invitations') return { name: 'about', path: '/about' };
+  if (path === '/about') return { name: 'about', path };
+  // Old signup URLs (/invitations, /waitlist/…) redirect to /about: 301 on the server, mirrored here.
+  if (isRetiredSignupPath(path)) return { name: 'about', path: '/about' };
   if (path === '/for-labels') return { name: 'labels', path };
-  const w = path.match(/^\/waitlist\/([a-z0-9-]+)$/);
-  if (w) return { name: 'waitlist', path, slug: w[1] };
   const m = path.match(/^\/archive\/([a-z0-9-]+)$/);
   if (m) return { name: 'piece', path, slug: m[1] };
   return { name: 'notfound', path };

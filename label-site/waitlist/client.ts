@@ -1,7 +1,27 @@
-// The drop waitlist form: email (required) plus an optional order number for first access.
+// LABEL-SITE KIT — the drop waitlist form for a label's own website (not used by Mino's public site).
+// Email (required) plus an optional order number for first access.
 // The server checks the order number and checkout email together against the label's order records.
 // A verified state is shown only when the server says round 1; failures offer the email-only second round.
-import { EMAIL_INVALID, formUI, post, WAITLIST } from './forms';
+import { name } from '../../src/config/brand';
+import { EMAIL_INVALID, formUI, post } from '../../src/forms';
+
+/** Round 1: verified past customers. Round 2: everyone else who signed up. */
+export const WAITLIST = {
+  busy: 'Joining…',
+  verified: 'Your order is verified. We’ll email you when first access opens.',
+  public: 'You’re on the waitlist. We’ll email you when the second round opens.',
+  confirm: `Confirm your email address from the message ${name} just sent.`,
+  emailOnly: 'Join the second round with email only',
+  alerts: {
+    duplicate: 'This email is already on the waitlist. We’ll email you when the second round opens.',
+    no_match: 'We couldn’t match that order number to this email address. Check both, or join the second round with your email alone.',
+    unavailable: 'Order verification isn’t available right now. You can join the second round with your email alone.',
+    preview: 'This is a preview. Sign-ups open when the drop is confirmed.',
+    not_configured: 'The waitlist isn’t open yet. Your email wasn’t saved. Please try again soon.',
+    unknown_drop: 'This waitlist link isn’t active.',
+    failed: 'You weren’t added to the waitlist. Please try again in a moment.',
+  } as Record<string, string>,
+};
 
 export function wireWaitlist(form: HTMLFormElement, opts: { dropId: string; onDone(message: string, extra: string | null): void; onChange?(): void }) {
   const ui = formUI(form, opts.onChange);

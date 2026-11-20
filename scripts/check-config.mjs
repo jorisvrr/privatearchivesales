@@ -1,8 +1,7 @@
-// Lists what is missing before the forms can go live. Usage: node --env-file=.env scripts/check-config.mjs
+// Lists what Mino's site still needs before the enquiry form can go live.
+// Usage: node --env-file=.env scripts/check-config.mjs
+// (Label-site waitlists: see label-site/waitlist/README.md.)
 import { missingConfig } from '../server/handlers.ts';
 const m = missingConfig(process.env);
-const out = (name, list) => console.log(list.length ? `✗ ${name}: missing ${list.join(', ')}` : `✓ ${name}: configured`);
-out('Waitlist storage', m.waitlist);
-out('Order verification', m.verification);
-out('Archive-sale enquiries', m.enquiry);
-process.exit(m.waitlist.length || m.enquiry.length || m.verification.length ? 1 : 0);
+console.log(m.enquiry.length ? `✗ Archive-sale enquiries: missing ${m.enquiry.join(', ')}` : '✓ Archive-sale enquiries: configured');
+process.exit(m.enquiry.length ? 1 : 0);

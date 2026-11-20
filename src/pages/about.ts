@@ -1,20 +1,13 @@
-// About: what Mino is, and the way into the current drop's waitlist.
+// About: what Mino is. Mino's site takes no shopper signups; each label announces its own drop.
 import { name, pageTitle, siteTitle } from '../config/brand';
-import { isDemo, waitlistHref } from '../content/sale';
 import { revealIn } from '../ui/reveal';
 import { h, type EnterInfo, type Page, type Route } from './types';
 
 export function aboutPage(route: Route): Page {
-  const href = waitlistHref();
-  // Confirmed drop: the label's own waitlist link. Demo: Mino's preview of the drop page. Neither: a note.
-  const action = href
-    ? h('a', { class: 'cta', href, 'data-reveal': 'block' }, isDemo() ? 'Preview the waitlist' : 'Join the waitlist')
-    : h('p', { class: 'lede__price', 'data-reveal': 'lines' }, 'The next waitlist link will be shared here.');
   const scroll = h('div', { class: 'page__scroll' },
-    h('header', { class: 'lede' },
+    h('header', { class: 'lede lede--text' },
       h('h1', { class: 'lede__title', tabindex: '-1', 'data-reveal': 'lines' }, 'Private archive sales for independent labels.'),
-      h('p', { class: 'lede__copy', 'data-reveal': 'lines' }, `${name} helps independent labels open their archives for a limited time. Each label shares a waitlist link for its sale. Bought from the label before? Verify a previous order for first access. Everyone else on the waitlist receives the second invitation.`),
-      action,
+      h('p', { class: 'lede__copy', 'data-reveal': 'lines' }, `${name} works with independent labels to bring past collections and samples back for a limited sale on the label’s own website. When a drop is announced, the label shares its waitlist link. Past customers can verify a previous order for first access. Everyone else who signs up is invited in the second round.`),
     ),
     h('footer', { class: 'foot' }, siteTitle),
   );

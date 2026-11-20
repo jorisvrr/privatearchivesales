@@ -1,19 +1,18 @@
 import { defineConfig, type Plugin } from 'vite';
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { handleEnquiry, handleWaitlist } from './server/handlers.ts';
-import { labelName, sale } from './src/content/sale.ts';
+import { handleEnquiry } from './server/handlers.ts';
 import { descriptor, name as brandName, siteTitle } from './src/config/brand.ts';
 
 // Serves /api/* locally (dev and preview) with the same handlers the Vercel functions use.
 function api(): Plugin {
   const handle = async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
     const url = req.url ?? '';
-    // Same permanent redirect as vercel.json.
-    if (/^\/invitations\/?(\?|$)/.test(url)) {
+    // Same permanent redirect as vercel.json: old signup URLs → /about.
+    if (/^\/(invitations|waitlist)(\/[^?]*)?(\?|$)/.test(url)) {
       res.writeHead(301, { location: '/about' + (url.includes('?') ? url.slice(url.indexOf('?')) : '') });
       return res.end();
     }
-    const route = url.startsWith('/api/waitlist') ? handleWaitlist : url.startsWith('/api/enquiry') ? handleEnquiry : null;
+    const route = url.startsWith('/api/enquiry') ? handleEnquiry : null;
     if (!route) return next();
     const chunks: Buffer[] = [];
     for await (const c of req) chunks.push(c as Buffer);
@@ -28,10 +27,9 @@ function api(): Plugin {
   };
   return {
     name: 'mino-api',
-    // Brand (src/config/brand.ts) into title, metadata and the no-JavaScript copy; the current drop into its form.
+    // Brand (src/config/brand.ts) into title, metadata and the no-JavaScript copy.
     transformIndexHtml: (html) => html
-      .replaceAll('%BRAND_SITE_TITLE%', siteTitle).replaceAll('%BRAND_NAME%', brandName).replaceAll('%BRAND_DESCRIPTOR%', descriptor)
-      .replaceAll('%MINO_DROP_ID%', sale.drop.id).replaceAll('%MINO_LABEL%', labelName()),
+      .replaceAll('%BRAND_SITE_TITLE%', siteTitle).replaceAll('%BRAND_NAME%', brandName).replaceAll('%BRAND_DESCRIPTOR%', descriptor),
     configureServer: (s) => { s.middlewares.use(handle); },
     configurePreviewServer: (s) => { s.middlewares.use(handle); },
   };

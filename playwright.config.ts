@@ -21,6 +21,6 @@ export default defineConfig({
     url: `http://localhost:${port}`,
     reuseExistingServer: false,
     timeout: 60_000,
-    env: { WAITLIST_PROVIDER: 'mock', ENQUIRY_PROVIDER: 'mock', MINO_ALLOW_MOCK: '1' },
+    env: { ENQUIRY_PROVIDER: 'mock', MINO_ALLOW_MOCK: '1' },
   },
 });

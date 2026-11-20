@@ -26,7 +26,17 @@
       "statusCode": 301
     },
     {
-      "source": "/invitations/",
+      "source": "/invitations/:path*",
+      "destination": "/about",
+      "statusCode": 301
+    },
+    {
+      "source": "/waitlist",
+      "destination": "/about",
+      "statusCode": 301
+    },
+    {
+      "source": "/waitlist/:path*",
       "destination": "/about",
       "statusCode": 301
     }

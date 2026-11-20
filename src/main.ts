@@ -8,8 +8,7 @@ import { ArchivePage } from './pages/archive';
 import { aboutPage } from './pages/about';
 import { labelsPage } from './pages/labels';
 import { notFoundPage, piecePage } from './pages/piece';
-import { waitlistPage } from './pages/waitlist';
-import { parseRoute, type Page, type Route } from './pages/types';
+import { isRetiredSignupPath, parseRoute, type Page, type Route } from './pages/types';
 import { prefersReduced } from './ui/reveal';
 
 const SLIDE = 1.2;
@@ -22,7 +21,7 @@ let archive: ArchivePage | null = null;
 let current: Page | null = null;
 let running: { tween: gsap.core.Tween | null; finish: () => void } | null = null;
 
-const navName = (r: Route): NavName => (r.name === 'about' || r.name === 'waitlist' ? 'about' : r.name === 'labels' ? 'labels' : 'archive');
+const navName = (r: Route): NavName => (r.name === 'about' ? 'about' : r.name === 'labels' ? 'labels' : 'archive');
 
 function makePage(route: Route): Page {
   switch (route.name) {
@@ -34,8 +33,6 @@ function makePage(route: Route): Page {
       return labelsPage(route);
     case 'piece':
       return piecePage(route) ?? notFoundPage(route);
-    case 'waitlist':
-      return waitlistPage(route) ?? notFoundPage(route);
     default:
       return notFoundPage(route);
   }
@@ -55,8 +52,8 @@ function unmount(p: Page) {
 async function go(href: string, kind: 'push' | 'pop' | 'initial') {
   const url = new URL(href, location.href);
   const route = parseRoute(url.pathname);
-  // Old /invitations links land on /about (the server answers with a 301; this covers in-app and dev).
-  if (url.pathname.replace(/\/+$/, '') === '/invitations') {
+  // Old signup links land on /about (the server answers with a 301; this covers in-app and dev).
+  if (isRetiredSignupPath(url.pathname)) {
     url.pathname = '/about';
     if (kind !== 'push') history.replaceState(null, '', url.pathname + url.search + url.hash);
   }
@@ -89,8 +86,8 @@ async function go(href: string, kind: 'push' | 'pop' | 'initial') {
     return;
   }
 
-  // Piece and drop pages sit a level deeper: they slide vertically.
-  const deep = (n: string) => n === 'piece' || n === 'waitlist';
+  // Piece pages sit a level deeper: they slide vertically.
+  const deep = (n: string) => n === 'piece';
   const toDeeper = deep(route.name) && !deep(old!.route.name);
   const fromDeeper = deep(old!.route.name) && !deep(route.name);
   const axis = toDeeper || fromDeeper ? 'y' : 'x';

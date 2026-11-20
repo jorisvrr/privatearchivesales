@@ -1,4 +1,5 @@
-// Per-drop waitlist: POST /api/waitlist { drop, email, order? }.
+// Per-drop waitlist handler for a LABEL'S OWN WEBSITE (not served by Mino's public site).
+// Mount it as POST /api/waitlist on the label-site deployment: { drop, email, order? }.
 //
 // One entry per email per drop. Round 1 = verified past customer of the featured label (order number and
 // checkout email must match the label's order records). Round 2 = everyone else who signed up for that drop.
@@ -16,11 +17,10 @@
 //   webhook   …_VERIFY_URL [ …_VERIFY_SECRET ]  → POST { drop, label, orderNumber, email } ⇒ { verified: boolean }
 // No verification configured ⇒ "unavailable": the visitor can still join round 2, never a verified state.
 import { createHash } from 'node:crypto';
-import { dropById as defaultDropById, type Drop } from '../src/content/sale.ts';
-import { clean, htmlPage, isEmail, json, methodNotAllowed, mockAllowed, readBody, type Env, type Fetch } from './http.ts';
+import { clean, htmlPage, isEmail, json, methodNotAllowed, mockAllowed, readBody, type Env, type Fetch } from '../../server/http.ts';
+import { dropById as defaultDropById, drops, type DropInfo } from './drops.ts';
 
 export type Round = 1 | 2;
-export type DropInfo = Drop & { label: string; status: 'demo' | 'confirmed' | 'none' };
 export interface WaitlistEntry { drop: string; label: string; email: string; round: Round }
 export type Verification = 'verified' | 'no_match' | 'unavailable';
 
@@ -231,4 +231,27 @@ async function decide(data: Record<string, string>, drop: DropInfo | null, env: 
     console.error('[mino] waitlist failed', err);
     return fail(502, 'failed');
   }
+}
+
+/** What a label-site deployment still needs: waitlist storage and order verification per drop. */
+export function missingWaitlistConfig(env: Env): { waitlist: string[]; verification: string[] } {
+  const waitlist: string[] = [];
+  const wp = env.WAITLIST_PROVIDER;
+  if (!wp) waitlist.push('WAITLIST_PROVIDER (buttondown | mailchimp)');
+  else if (wp === 'buttondown') { if (!env.BUTTONDOWN_API_KEY) waitlist.push('BUTTONDOWN_API_KEY'); }
+  else if (wp === 'mailchimp') {
+    if (!env.MAILCHIMP_API_KEY || !/-[a-z]+\d+$/.test(env.MAILCHIMP_API_KEY)) waitlist.push('MAILCHIMP_API_KEY (format key-usX)');
+    if (!env.MAILCHIMP_AUDIENCE_ID) waitlist.push('MAILCHIMP_AUDIENCE_ID');
+  } else if (wp === 'mock') { if (!mockAllowed(env)) waitlist.push('WAITLIST_PROVIDER=mock is for local tests only'); }
+  else waitlist.push(`WAITLIST_PROVIDER "${wp}" is not supported`);
+  const verification: string[] = [];
+  for (const d of drops()) {
+    if (d.status === 'none') continue;
+    const k = envKey(d.id);
+    if (!d.verification) verification.push(`${d.id}: no order verification set (Drop.verification = 'shopify' | 'webhook')`);
+    else if (d.verification === 'shopify') {
+      for (const v of ['SHOPIFY_DOMAIN', 'SHOPIFY_TOKEN']) if (!env[`${k}_${v}`]) verification.push(`${k}_${v}`);
+    } else if (d.verification === 'webhook' && !env[`${k}_VERIFY_URL`]) verification.push(`${k}_VERIFY_URL`);
+  }
+  return { waitlist, verification };
 }

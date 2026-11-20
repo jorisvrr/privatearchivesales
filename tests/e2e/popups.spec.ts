@@ -140,28 +140,6 @@ for (const pop of POPUPS) {
   });
 }
 
-test.describe('waitlist popup — desktop 1440×900', () => {
-  test.use({ viewport: DESKTOP });
-  test('opens on arrival as a nonmodal card; Esc returns focus to the corner trigger; disclosure reveals the order field', async ({ page }) => {
-    await page.goto('/waitlist/demo-archive-001');
-    const dialog = page.getByRole('dialog', { name: 'Join the Featured label archive waitlist' });
-    await expect(dialog).toHaveAttribute('aria-modal', 'false');
-    await expect(page.getByLabel('Email address')).toBeFocused();
-    await expect(page.getByLabel('Order number')).toBeHidden();
-    const summary = page.getByText('Bought from Featured label before? Get first access.');
-    await summary.click();
-    await expect(page.getByLabel('Order number')).toBeFocused();
-    await expect(page.getByLabel('Order number')).toHaveAccessibleDescription('Use the email address from your original order.');
-    const box = await rect(page, '.fp-panel');
-    expect([box.x, box.y]).toEqual([8, 8]);
-    for (const c of await controls(page, '.fp-panel')) expect(c.h, c.name).toBeGreaterThanOrEqual(44);
-    expect((await summary.boundingBox())!.height).toBeGreaterThanOrEqual(44);
-    await page.keyboard.press('Escape');
-    await expect(page.locator('.fp-trigger')).toBeFocused();
-    await expect(page.locator('.fp-trigger')).toHaveAccessibleName('Join the waitlist');
-  });
-});
-
 test.describe('reduced motion', () => {
   test.use({ viewport: DESKTOP, reducedMotion: 'reduce' });
   test('opens with opacity only, no translate', async ({ page }) => {

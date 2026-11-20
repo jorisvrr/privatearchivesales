@@ -28,7 +28,7 @@ export async function settled(p: Page) {
 /** Angle between two quaternions, in radians. */
 export const quatAngle = (a: number[], b: number[]) => 2 * Math.acos(Math.min(1, Math.abs(a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3])));
 
-export const REFERENCE_WORDS = /Orvel|mailing list|Gionatan|Nese\b|GN \.D|GN\.D|Creative Space|Multi.?Disciplinary|Curated Selection|DashDigital|Yousuf|Soomro|Erica Basile|Ferrari|Tengile|Project Info/i;
+export const REFERENCE_WORDS = /Orvel|mailing list|join the waitlist|preview the waitlist|Gionatan|Nese\b|GN \.D|GN\.D|Creative Space|Multi.?Disciplinary|Curated Selection|DashDigital|Yousuf|Soomro|Erica Basile|Ferrari|Tengile|Project Info/i;
 
 export async function expectNoReferenceBranding(p: Page) {
   const text = await p.evaluate(() => document.title + '\n' + document.body.innerText + '\n' + [...document.querySelectorAll('[aria-label],[alt],[title]')].map((e) => e.getAttribute('aria-label') + ' ' + e.getAttribute('alt') + ' ' + e.getAttribute('title')).join(' '));

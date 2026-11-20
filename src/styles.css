@@ -136,6 +136,9 @@ img { display: block; max-width: 100%; }
 }
 .cta:hover { background: #2b2b2b; }
 .cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.lede--text { padding-bottom: 14vh; }
+.lede--text .lede__copy { margin-top: 40px; max-width: 470px; font-size: 18px; line-height: 1.5; }
+@media (max-width: 640px) { .lede--text { padding-bottom: 10vh; } .lede--text .lede__copy { margin-top: 32px; font-size: 16px; } }
 .lede__price { margin-top: 20px; max-width: 430px; font: 400 15px/1.45 var(--serif); color: var(--ink); }
 
 /* ------------------------------------------------------------------ glass panel / bottom sheet */

@@ -21,7 +21,7 @@ describe('brand config', () => {
   });
 
   it('no visitor-facing source hardcodes the brand name', () => {
-    const scanned = [...files('src'), ...files('server'), ...files('api'), 'index.html', ...files('emails').filter((f) => f.endsWith('.html') && !f.includes('rendered'))]
+    const scanned = [...files('src'), ...files('server'), ...files('api'), 'index.html', ...files('label-site').filter((f) => !f.includes('rendered'))]
       .filter((f) => /\.(ts|html)$/.test(f) && relative('src/config', f).startsWith('..'));
     expect(scanned.length).toBeGreaterThan(20);
     const hits = scanned.filter((f) => new RegExp(`\\b${name}\\b`).test(code(readFileSync(join(root, f), 'utf8'))));
