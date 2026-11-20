@@ -10,6 +10,10 @@ Mino builds the archive page on a label's website. The label shares one waitlist
 
 Mino's public site explains the service and takes founder enquiries only. It has no waitlist route, form, endpoint or link, even when a drop is live. The per-drop waitlist (verified first access, second round) lives in `label-site/waitlist/` for deployment on a label's own website; see its README.
 
+## Sound and cursor
+
+Sound starts muted. The desktop intro offers "Click to enable audio", and the sound button (top right, every page) works everywhere. Three CC0 cues play on animation events: a paper shuffle as the images stack, a fabric sweep as the sphere opens, and a soft click when a piece is selected. Playback uses howler; the files and credits are in `public/media/sound/`, rebuilt with `python3 scripts/process-sounds.py <work-dir>`. Interface icons come from Lucide (the framework-free `lucide` package). Details: `docs/sound/README.md`.
+
 ## Brand
 
 The name lives in one place: `src/config/brand.ts` (`name`, `descriptor`, `siteTitle`, `eventCredit`, `pageTitle()`). The wordmark, page titles, metadata and Open Graph (via `vite.config.ts`), form copy, confirmations, server answer pages and the label-site email templates (`node scripts/render-emails.mjs`) all read from it; `tests/unit/brand.test.ts` fails if the name is hardcoded anywhere else. Manual swap when the name changes: `public/favicon.svg` (a drawn letter). `node scripts/check-nav-brand.mjs "<longer name>"` checks the centred nav with other names.

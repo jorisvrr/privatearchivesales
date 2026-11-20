@@ -103,9 +103,9 @@ test.describe('desktop 1440×900', () => {
     expect(e.cy).toBeCloseTo(450, 1);
     expect(s.planes.filter((p) => p.id !== s.expanded).every((p) => p.opacity < 0.01)).toBe(true);
     await page.mouse.move(720, 400);
-    await expect(page.locator('.cursor-label')).toHaveText('View');
+    await expect(page.locator('.cursor-label')).toHaveAttribute('data-label', 'Details'); // a click opens its story
     await page.mouse.move(1200, 400);
-    await expect(page.locator('.cursor-label')).toHaveText('Close');
+    await expect(page.locator('.cursor-label')).toHaveAttribute('data-label', 'Close'); // shown as Lucide’s X
     const qBefore = s.q;
     await page.mouse.move(720, 400);
     await page.mouse.down();

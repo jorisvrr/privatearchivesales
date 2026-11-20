@@ -20,6 +20,8 @@ export interface IntroHooks {
   onProgress(loaded: number, total: number): void;
   onGate(): void;
   onCollapse(): void;
+  /** The first of the ten ring images reaches the centre stack (gate + 3.35 s). */
+  onStackMeet(): void;
   onExplode(): void;
   onDone(): void;
 }
@@ -205,6 +207,8 @@ export class SphereScene {
     });
     tl.to(this.ring, { mult: 7.3, duration: 1, ease: 'power2.in' }, 1.3);
     tl.call(() => h.onCollapse(), [], 2.1);
+    // Ring plane 0 starts converging at 2.1 s and lands after 1.25 s; the rest follow 0.05 s apart.
+    tl.call(() => h.onStackMeet(), [], 2.1 + 1.25);
     ring.forEach((p, i) => tl.to(p.intro, { cp: 1, duration: 1.25, ease: 'power2.inOut' }, 2.1 + i * 0.05));
     tl.call(() => {
       this.phase = 'explode';
@@ -231,6 +235,10 @@ export class SphereScene {
     this.lastT = now;
     this.update(dt);
     this.renderer.render(this.scene, this.camera);
+    if (this.mouse.inside && this.interactive && !this.press && !this.touchUI) {
+      if (!this.isOpen) this.hoverTo(this.pick(this.mouse.x, this.mouse.y));
+      this.updateCursor();
+    }
   }
 
   private update(dt: number) {
@@ -373,6 +381,7 @@ export class SphereScene {
           this.stopAmbient();
         }
         this.canvas.style.cursor = 'grabbing';
+        this.hooks.onCursor(null, ev.clientX, ev.clientY);
       }
       return;
     }
@@ -453,17 +462,19 @@ export class SphereScene {
       this.hooks.onCursor(null, x, y);
       return;
     }
-    if (this.press && (this.press.max >= 6 || this.press.travel >= 10)) return;
+    // Once a drag begins the label hides; the native cursor shows "grabbing".
+    if (this.press && (this.press.max >= 6 || this.press.travel >= 10)) return this.hooks.onCursor(null, x, y);
+    // The label names what the next click does in this state. Touch uses the tap controls instead.
     if (this.isOpen) {
       const over = this.pick(x, y) === this.focus;
       this.canvas.style.cursor = 'pointer';
-      this.hooks.onCursor(this.touchUI ? null : over ? 'View' : 'Close', x, y);
+      this.hooks.onCursor(this.touchUI ? null : over ? 'Details' : 'Close', x, y);
       return;
     }
-    this.hooks.onCursor(null, x, y);
     const hit = this.candidate;
     const near = Math.hypot(x - innerWidth / 2, y - innerHeight / 2) < 250;
     this.canvas.style.cursor = hit ? 'pointer' : near ? 'grab' : 'default';
+    this.hooks.onCursor(this.touchUI ? null : hit ? 'View' : near ? 'Drag' : null, x, y);
   }
 
   // ---------------------------------------------------------------- expand

@@ -3,6 +3,7 @@
 // ≤640 px: a modal bottom sheet (aria-modal=true; focus trapped, page inert, background scroll locked).
 // Escape and × close it; focus returns to whichever trigger opened it.
 import { gsap } from 'gsap';
+import { icon, icons } from './icons';
 
 const SHEET = '(max-width: 640px)';
 const FINE = '(hover: hover) and (pointer: fine)';
@@ -68,7 +69,7 @@ export class FormPanel {
     this.closeBtn.type = 'button';
     this.closeBtn.className = 'fp-close';
     this.closeBtn.setAttribute('aria-label', 'Close');
-    this.closeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" fill="none"/></svg>';
+    this.closeBtn.append(icon(icons.close));
     this.closeBtn.addEventListener('click', () => this.close());
     head.append(this.heading, this.closeBtn);
 

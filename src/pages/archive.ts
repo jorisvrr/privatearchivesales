@@ -4,6 +4,8 @@ import { descriptor, name as brandName, siteTitle } from '../config/brand';
 import { EVENT_CREDIT, eventTitle, garmentOf, isDemo, plateSubtitle, sale, VIEW_NAMES, type Plate } from '../content/sale';
 import type { Nav } from '../nav';
 import { SphereScene, webglAvailable } from '../scene/sphere';
+import { sound } from '../sound';
+import { icon, icons } from '../ui/icons';
 import { maskedIn, maskedOut, prefersReduced } from '../ui/reveal';
 import { h, type EnterInfo, type Page, type Route } from './types';
 
@@ -32,6 +34,10 @@ export class ArchivePage implements Page {
   private cx: gsap.QuickToFunc;
   private cy: gsap.QuickToFunc;
   private cursorOn = false;
+  private cursorText: string | null = null;
+  private promptLayer: HTMLElement | null = null;
+  private prompt: HTMLElement | null = null;
+  private promptOff: (() => void) | null = null;
   /** performance.now() when the intro began (QA: aligns timestamps with the reference). */
   introAt: number | null = null;
 
@@ -54,16 +60,18 @@ export class ArchivePage implements Page {
         return h('li', {}, a);
       })),
     );
-    this.chrome = h('div', { class: 'chrome chrome--archive' }, this.slot, this.action, this.cursor, this.live, kb);
+    this.chrome = h('div', { class: 'chrome chrome--archive' }, this.slot, this.action, this.live, kb);
+    // The cursor label blends (difference) with the page, so it must live outside the chrome's stacking context.
+    document.body.append(this.cursor);
     this.cx = gsap.quickTo(this.cursor, 'x', { duration: 0.5, ease: 'power3.out' });
     this.cy = gsap.quickTo(this.cursor, 'y', { duration: 0.5, ease: 'power3.out' });
-    gsap.set(this.cursor, { xPercent: -50, yPercent: -50, scale: 0.6, opacity: 0 });
+    gsap.set(this.cursor, { scale: 0.6, opacity: 0, transformOrigin: '0 0' });
 
     if (webglAvailable()) {
       try {
         this.scene = new SphereScene({
           onHover: (p) => { this.hovered = p; this.refreshRow(); },
-          onExpand: (p) => this.onExpand(p),
+          onExpand: (p) => { if (p) sound.cue('click'); this.onExpand(p); },
           onOpen: (p) => this.go(plateHref(p)),
           onCursor: (label, x, y) => this.setCursor(label, x, y),
           onInteract: () => {},
@@ -121,18 +129,90 @@ export class ArchivePage implements Page {
     this.live.textContent = p ? `${garmentOf(p).title}, ${VIEW_NAMES[p.view].toLowerCase()}, enlarged.` : '';
   }
 
+  /**
+   * Cursor label beside the native pointer: Drag / View / Details, or an X for Close.
+   * It trails the pointer slightly (none with reduced motion) and flips sides near the viewport edges.
+   */
   private setCursor(label: string | null, x: number, y: number) {
     const desktop = matchMedia('(min-width: 1025px) and (hover: hover)').matches;
     const overTitle = y > innerHeight - 70 && Math.abs(x - innerWidth / 2) < 200;
     const show = !!label && desktop && !overTitle;
-    if (label) this.cursor.textContent = label;
-    this.cx(x);
-    this.cy(y);
+    if (label && label !== this.cursorText) {
+      this.cursorText = label;
+      this.cursor.dataset.label = label;
+      this.cursor.replaceChildren(label === 'Close' ? icon(icons.close) : document.createTextNode(label));
+    }
+    if (!show) this.cursor.dataset.label = '';
+    else this.cursor.dataset.label = this.cursorText ?? '';
+    const off = 14;
+    const w = this.cursor.offsetWidth;
+    const hgt = this.cursor.offsetHeight;
+    const tx = x + off + w > innerWidth - 8 ? x - off - w : x + off;
+    const ty = y + off + hgt > innerHeight - 8 ? y - off - hgt : y + off;
+    const reduced = prefersReduced();
+    if (reduced || (show && !this.cursorOn)) gsap.set(this.cursor, { x: tx, y: ty });
+    else { this.cx(tx); this.cy(ty); }
     if (show !== this.cursorOn) {
       this.cursorOn = show;
-      if (show) gsap.set(this.cursor, { x, y });
-      gsap.to(this.cursor, { opacity: show ? 1 : 0, scale: show ? 1 : 0.6, duration: 0.45, ease: 'power3.out', overwrite: 'auto' });
+      gsap.to(this.cursor, reduced
+        ? { opacity: show ? 1 : 0, scale: 1, duration: 0.12, overwrite: 'auto' }
+        : { opacity: show ? 1 : 0, scale: show ? 1 : 0.6, duration: 0.45, ease: 'power3.out', overwrite: 'auto' });
     }
+  }
+
+  // ------------------------------------------------------------ "Click to enable audio" (desktop intro)
+
+  /**
+   * A transparent layer over the sphere for the length of the intro. The first pointer move fades in
+   * the prompt 14 px below-right of the arrow; it follows with the audit's 0.5 s power3.out lag. A click
+   * while it is visible turns sound on and does nothing else: the layer takes that click, so it can never
+   * open a piece, even if the pointer is over one as the intro ends.
+   */
+  private startAudioPrompt() {
+    if (sound.enabled || !matchMedia('(min-width: 1025px) and (hover: hover) and (pointer: fine)').matches) return;
+    const layer = h('div', { class: 'audio-layer', 'aria-hidden': 'true' });
+    const prompt = h('div', { class: 'audio-prompt', 'aria-hidden': 'true' }, icon(icons.volumeOn, 12), h('span', {}, 'Click to enable audio'));
+    this.chrome.append(layer);
+    document.body.append(prompt); // outside the chrome's stacking context, so difference blending reaches the page
+    this.promptLayer = layer;
+    this.prompt = prompt;
+    gsap.set(prompt, { opacity: 0 });
+    const px = gsap.quickTo(prompt, 'x', { duration: 0.5, ease: 'power3.out' });
+    const py = gsap.quickTo(prompt, 'y', { duration: 0.5, ease: 'power3.out' });
+    let shown = false;
+    layer.addEventListener('pointermove', (e) => {
+      if (!shown) {
+        shown = true;
+        prompt.dataset.visible = 'true';
+        gsap.set(prompt, { x: e.clientX + 14, y: e.clientY + 14 });
+        gsap.to(prompt, { opacity: 1, duration: 0.3 });
+      }
+      px(e.clientX + 14);
+      py(e.clientY + 14);
+    });
+    layer.addEventListener('pointerdown', (e) => e.stopPropagation());
+    layer.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (shown && !sound.enabled) sound.enable(); // the toggle updates through its subscription
+    });
+    this.promptOff = sound.subscribe((on) => { if (on) this.dismissAudioPrompt(0.4); });
+  }
+
+  private dismissAudioPrompt(duration: number) {
+    const prompt = this.prompt;
+    const layer = this.promptLayer;
+    if (!prompt || !layer) return;
+    this.prompt = null;
+    this.promptLayer = null;
+    this.promptOff?.();
+    this.promptOff = null;
+    const wasShown = prompt.dataset.visible === 'true';
+    delete prompt.dataset.visible;
+    gsap.killTweensOf(prompt);
+    // Never shown (no pointer movement): nothing to consume, so the sphere takes input straight away.
+    if (duration === 0 || !wasShown) { prompt.remove(); layer.remove(); return; }
+    // The layer stays for the fade so a late click is still consumed rather than opening a piece.
+    gsap.to(prompt, { opacity: 0, duration, onComplete: () => { prompt.remove(); layer.remove(); } });
   }
 
   // ------------------------------------------------------------ fallback
@@ -198,6 +278,7 @@ export class ArchivePage implements Page {
     };
     gsap.ticker.add(pace);
 
+    this.startAudioPrompt();
     void s.playIntro({
       onProgress: (loaded, total) => { frac = loaded / total; },
       onGate: () => {
@@ -210,12 +291,15 @@ export class ArchivePage implements Page {
         gsap.to(logo, { opacity: 0, duration: 0.75, ease: 'power2.inOut' });
         gsap.to(words, { yPercent: -100, opacity: 0, duration: 0.75, ease: 'power4.out', stagger: 0.07 });
       },
+      onStackMeet: () => { sound.cue('paper'); },
       onExplode: () => {
+        sound.cue('fabric');
         this.nav.dropIn();
         this.restShown = true;
         this.refreshRow();
       },
       onDone: () => {
+        this.dismissAudioPrompt(0.5); // no click: the intro ends silently and the prompt goes
         this.intro?.remove();
         this.intro = null;
       },
@@ -249,6 +333,7 @@ export class ArchivePage implements Page {
 
   leave(info: { instant: boolean; duration: number }) {
     this.setCursor(null, 0, 0);
+    this.dismissAudioPrompt(0);
     gsap.to(this.chrome, { opacity: 0, duration: info.instant ? 0 : 0.3, overwrite: true });
   }
 

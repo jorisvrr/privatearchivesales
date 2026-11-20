@@ -9,7 +9,9 @@ import { aboutPage } from './pages/about';
 import { labelsPage } from './pages/labels';
 import { notFoundPage, piecePage } from './pages/piece';
 import { isRetiredSignupPath, parseRoute, type Page, type Route } from './pages/types';
+import { sound } from './sound';
 import { prefersReduced } from './ui/reveal';
+import { createSoundToggle } from './ui/sound-toggle';
 
 const SLIDE = 1.2;
 const ORDER: Record<string, number> = { archive: 0, about: 1, labels: 2 };
@@ -17,6 +19,9 @@ const ORDER: Record<string, number> = { archive: 0, about: 1, labels: 2 };
 const root = document.getElementById('pages')!;
 const chromeRoot = document.getElementById('chrome')!;
 const nav = new Nav();
+// Sound control on every page; the visitor's choice lasts while they move between pages.
+document.body.append(createSoundToggle());
+sound.preload();
 let archive: ArchivePage | null = null;
 let current: Page | null = null;
 let running: { tween: gsap.core.Tween | null; finish: () => void } | null = null;
@@ -146,8 +151,8 @@ async function boot() {
 
 // Read-only hooks for the test suite and verification sheets.
 declare global {
-  interface Window { __mino: { nav: Nav; archive: () => ArchivePage | null; current: () => Page | null; running: () => boolean } }
+  interface Window { __mino: { sound: typeof sound; nav: Nav; archive: () => ArchivePage | null; current: () => Page | null; running: () => boolean } }
 }
-window.__mino = { nav, archive: () => archive, current: () => current, running: () => !!running };
+window.__mino = { sound, nav, archive: () => archive, current: () => current, running: () => !!running };
 
 void boot();

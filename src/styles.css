@@ -80,9 +80,25 @@ img { display: block; max-width: 100%; }
   text-decoration: none; white-space: nowrap; will-change: transform;
 }
 .demo-chip {
-  position: fixed; top: 8px; right: 8px; z-index: 9999; height: 24px; padding: 0 8px; border-radius: 4px;
+  position: fixed; top: 8px; right: 52px; z-index: 9999; height: 24px; padding: 0 8px; border-radius: 4px;
   font: 500 11px/24px var(--sans); background: var(--glass); -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px);
 }
+
+/* Sound control: a 28×24 glass pill at the nav's 8 px inset, inside a 44×44 target. */
+.sound-toggle {
+  position: fixed; top: -2px; right: 0; z-index: 9999; width: 44px; height: 44px; padding: 0; border: 0;
+  display: grid; place-items: center; background: none; cursor: pointer; color: var(--ink-dom);
+}
+.sound-toggle__pill {
+  display: grid; place-items: center; width: 28px; height: 24px; border-radius: var(--radius);
+  background: var(--glass); -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px);
+  transition: background-color .35s cubic-bezier(.25,.46,.45,.94);
+}
+.sound-toggle:hover .sound-toggle__pill { background: var(--glass-hover); }
+.sound-toggle:focus-visible { outline: none; }
+.sound-toggle:focus-visible .sound-toggle__pill { outline: 2px solid var(--ink); outline-offset: 2px; }
+.icon { display: block; flex: none; }
+@media (max-width: 1024px) { .demo-chip { right: auto; left: 8px; } }
 
 /* ------------------------------------------------------------------ pages and transitions */
 .pages { position: fixed; inset: 0; overflow: hidden; }
@@ -311,7 +327,15 @@ a.cta { text-decoration: none; }
 }
 .cursor-label {
   position: fixed; top: 0; left: 0; z-index: 70; pointer-events: none; white-space: nowrap;
+  display: flex; align-items: center; min-height: 16px;
   font: 500 13px/15.6px var(--sans); color: #fff; mix-blend-mode: difference;
+}
+/* Intro: "Click to enable audio" beside the arrow; the layer takes the enabling click. */
+.audio-layer { position: fixed; inset: 0; z-index: 65; pointer-events: auto; cursor: default; }
+.audio-prompt {
+  position: fixed; top: 0; left: 0; z-index: 66; pointer-events: none; white-space: nowrap;
+  display: flex; align-items: center; gap: 5px;
+  font: 500 11px/12px var(--sans); letter-spacing: -0.01em; color: #fff; mix-blend-mode: difference;
 }
 .kb-list a { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .kb-list a:focus, .kb-list a:focus-visible {
