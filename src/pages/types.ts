@@ -36,12 +36,19 @@ export interface Page {
 /** Mino's site takes no shopper signups; these old URLs all land on /about. */
 export const isRetiredSignupPath = (path: string) => /^\/(invitations|waitlist)(\/.*)?$/.test(path.replace(/\/+$/, '') || '/');
 
+/** Detail slugs of the earlier illustrated demo garments; they now land on the Archive. */
+export const RETIRED_PIECES = /^\/archive\/(chore-jacket|long-coat|poplin-shirt|ribbed-jumper|wide-leg-trouser)\/?$/;
+
+/** Where an old URL now lives (301 on the server, mirrored client-side), or null. */
+export const retiredRedirect = (path: string): string | null => (isRetiredSignupPath(path) ? '/about' : RETIRED_PIECES.test(path) ? '/' : null);
+
 export function parseRoute(pathname: string): Route {
   const path = pathname.replace(/\/+$/, '') || '/';
   if (path === '/' || path === '/archive') return { name: 'archive', path: '/' };
   if (path === '/about') return { name: 'about', path };
   // Old signup URLs (/invitations, /waitlist/…) redirect to /about: 301 on the server, mirrored here.
   if (isRetiredSignupPath(path)) return { name: 'about', path: '/about' };
+  if (RETIRED_PIECES.test(path)) return { name: 'archive', path: '/' };
   if (path === '/for-labels') return { name: 'labels', path };
   const m = path.match(/^\/archive\/([a-z0-9-]+)$/);
   if (m) return { name: 'piece', path, slug: m[1] };

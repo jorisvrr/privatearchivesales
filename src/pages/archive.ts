@@ -1,7 +1,7 @@
 // Archive: the signature sphere (AUDIT.md §3) plus its DOM overlays.
 import { gsap } from 'gsap';
 import { descriptor, name as brandName, siteTitle } from '../config/brand';
-import { EVENT_CREDIT, eventTitle, garmentOf, isDemo, plateSubtitle, sale, VIEW_NAMES, type Plate } from '../content/sale';
+import { collection, groupOf, imageHref, images, INTRO_RING, type StudyImage as Plate } from '../content/study';
 import type { Nav } from '../nav';
 import { SphereScene, webglAvailable } from '../scene/sphere';
 import { sound } from '../sound';
@@ -9,7 +9,7 @@ import { icon, icons } from '../ui/icons';
 import { maskedIn, maskedOut, prefersReduced } from '../ui/reveal';
 import { h, type EnterInfo, type Page, type Route } from './types';
 
-const plateHref = (p: Plate) => `/archive/${p.garment}`;
+const plateHref = imageHref;
 
 export class ArchivePage implements Page {
   route: Route = { name: 'archive', path: '/' };
@@ -43,8 +43,8 @@ export class ArchivePage implements Page {
 
   constructor(private nav: Nav, private go: (path: string) => void) {
     this.el = h('main', { class: 'page page--archive', id: 'main' },
-      h('h1', { class: 'sr-only', tabindex: '-1' }, `Archive: ${eventTitle()}`),
-      h('p', { class: 'sr-only' }, `${EVENT_CREDIT}. Browse the pieces below, or open the list of pieces with the Tab key.${isDemo() ? ' These are demo plates, not confirmed pieces.' : ''}`),
+      h('h1', { class: 'sr-only', tabindex: '-1' }, `Archive: ${collection.title}`),
+      h('p', { class: 'sr-only' }, `${collection.credit}. Eighteen photographs in six groups. Browse them below, or open the list of photographs with the Tab key.`),
     );
     this.slot = h('div', { class: 'title-slot' });
     this.action = h('button', { type: 'button', class: 'title-action' }, 'View piece') as HTMLButtonElement;
@@ -52,9 +52,9 @@ export class ArchivePage implements Page {
     this.action.addEventListener('click', () => this.expanded && this.go(plateHref(this.expanded)));
     this.cursor = h('div', { class: 'cursor-label', 'aria-hidden': 'true' });
     this.live = h('p', { class: 'sr-only', role: 'status', 'aria-live': 'polite' });
-    const kb = h('nav', { class: 'kb-list', 'aria-label': 'Pieces in this sale' },
-      h('ul', {}, ...sale.plates.map((p, i) => {
-        const a = h('a', { href: plateHref(p), 'data-plate': String(i) }, `${garmentOf(p).title}, ${VIEW_NAMES[p.view].toLowerCase()}`);
+    const kb = h('nav', { class: 'kb-list', 'aria-label': `Photographs in ${collection.title}` },
+      h('ul', {}, ...images.map((p, i) => {
+        const a = h('a', { href: plateHref(p), 'data-plate': String(i) }, `${p.caption}, ${groupOf(p).name}`);
         a.addEventListener('focus', () => { this.kbFocus = p; this.refreshRow(); });
         a.addEventListener('blur', () => { if (this.kbFocus === p) { this.kbFocus = null; this.refreshRow(); } });
         return h('li', {}, a);
@@ -75,7 +75,7 @@ export class ArchivePage implements Page {
           onOpen: (p) => this.go(plateHref(p)),
           onCursor: (label, x, y) => this.setCursor(label, x, y),
           onInteract: () => {},
-        }, sale.plates);
+        }, images, INTRO_RING);
         this.scene.contextLost = () => this.showFallback();
         this.el.append(this.scene.canvas);
         window.addEventListener('resize', () => this.scene?.resize());
@@ -94,8 +94,8 @@ export class ArchivePage implements Page {
 
   private refreshRow() {
     const p = this.expanded ?? this.hovered ?? this.kbFocus;
-    if (p) this.setRow(p.id, garmentOf(p).title, plateSubtitle(p));
-    else if (this.restShown) this.setRow('rest', eventTitle(), EVENT_CREDIT);
+    if (p) this.setRow(p.id, p.caption, groupOf(p).name);
+    else if (this.restShown) this.setRow('rest', collection.title, collection.credit);
     else this.setRow(null);
   }
 
@@ -126,7 +126,7 @@ export class ArchivePage implements Page {
     } else if (!this.action.hidden) {
       gsap.to(this.action, { opacity: 0, duration: 0.3, overwrite: true, onComplete: () => { if (!this.expanded) this.action.hidden = true; } });
     }
-    this.live.textContent = p ? `${garmentOf(p).title}, ${VIEW_NAMES[p.view].toLowerCase()}, enlarged.` : '';
+    this.live.textContent = p ? `${p.caption}, ${groupOf(p).name}, enlarged.` : '';
   }
 
   /**
@@ -226,13 +226,13 @@ export class ArchivePage implements Page {
     this.intro?.remove();
     this.fallback = h('div', { class: 'page__scroll fallback' },
       h('header', { class: 'fallback__head' },
-        h('p', {}, h('span', { class: 't-sans' }, eventTitle()), ' ', h('span', { class: 't-serif' }, EVENT_CREDIT)),
+        h('p', {}, h('span', { class: 't-sans' }, collection.title), ' ', h('span', { class: 't-serif' }, collection.credit)),
       ),
-      h('ul', { class: 'grid' }, ...sale.plates.map((p) => h('li', { class: 'tile' },
+      h('ul', { class: 'grid' }, ...images.map((p) => h('li', { class: 'tile' },
         h('a', { href: plateHref(p) },
-          h('img', { src: p.small, alt: p.alt, width: '300', height: '400', loading: 'lazy' }),
-          h('span', { class: 'tile__title' }, garmentOf(p).title),
-          h('span', { class: 'tile__sub' }, plateSubtitle(p)),
+          h('img', { src: p.medium, srcset: `${p.small} 300w, ${p.medium} 640w, ${p.large} 1086w`, sizes: '(max-width: 640px) calc(100vw - 16px), (max-width: 1024px) calc(50vw - 12px), calc(33vw - 11px)', alt: p.alt, width: '640', height: '853', loading: 'lazy', decoding: 'async' }),
+          h('span', { class: 'tile__title' }, p.caption),
+          h('span', { class: 'tile__sub' }, groupOf(p).name),
         ),
       ))),
     );

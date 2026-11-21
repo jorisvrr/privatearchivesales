@@ -46,9 +46,14 @@ Waitlist configuration belongs to the label-site deployment (`label-site/waitlis
 
 ## Content
 
-`src/content/sale.ts` holds the sale. It is in **demo** state: no partner, date, city, inventory or price has been supplied, so none is shown, and a "Demo" chip appears on every page. When a label is confirmed: set `status: 'confirmed'` and `label`, then fill each garment's `season`, `size`, `condition`, `price` and `note` only with what the label approved.
+The Archive shows **Mino Study 001**, "An editorial study by Mino": 18 photographs in six groups (Corduroy, Ecru denim, Nubuck boots, Invitation, Archive record, Packing). One data module feeds the intro ring, the sphere, hover captions, the enlarged view, detail pages (`/archive/<image>`), the keyboard list and the no-WebGL grid: `src/content/study.ts`. It holds the captions, alt text, sphere slot order (art-directed front cluster) and intro ring order. The detail pages state once, in the collection details, that it's an AI-generated editorial study. There are no prices or stock.
 
-The 18 images in `public/media/demo/` are illustrated demo plates (`scripts/generate-demo-plates.mjs`), each marked "Demo plate NN". Replace them with real photography: 3:4 portrait, a small file (≈300×400) for the sphere and a large one (≈960×1280) for the enlarged view and the piece page. One garment can supply a full silhouette, a detail, a sample tag and a lookbook image. Plates 1–10 form the intro ring.
+Images are built with `python3 scripts/build-study-images.py` from the original PNGs in `assets/study-001/originals/`, which are local only (not in git, never served):
+- `-s` 300×400 WebP: sphere and intro textures. The 18 together are 181 KB, the only images on the Archive's first load.
+- `-m` 640×853: the fallback grid and thumbnails.
+- `-l` 1086×1448: loaded when a piece is enlarged or opened.
+
+The old demo garment URLs (`/archive/chore-jacket` etc.) redirect to `/`.
 
 ## Fonts
 

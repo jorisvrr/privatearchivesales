@@ -39,6 +39,31 @@
       "source": "/waitlist/:path*",
       "destination": "/about",
       "statusCode": 301
+    },
+    {
+      "source": "/archive/chore-jacket",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/archive/long-coat",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/archive/poplin-shirt",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/archive/ribbed-jumper",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/archive/wide-leg-trouser",
+      "destination": "/",
+      "statusCode": 301
     }
   ]
 }

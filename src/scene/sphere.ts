@@ -2,7 +2,7 @@
 // One instance lives for the whole page session, so orientation survives route changes.
 import * as THREE from 'three';
 import { gsap } from 'gsap';
-import type { Plate } from '../content/sale';
+import type { StudyImage as Plate } from '../content/study';
 import {
   AMBIENT_AXIS, AMBIENT_RAD_PER_S, CAMERA_Z, FOV, decay, fibonacciSlots, project, quatFromAxisAngle, quatMul,
   quatNormalize, slotWorld, sphereLayout, worldRotationInLayout, type Quat, type SphereLayout, type Vec3,
@@ -31,6 +31,8 @@ type Phase = 'idle' | 'ring' | 'explode' | 'live';
 interface PlaneObj {
   plate: Plate;
   index: number;
+  /** Position in the intro ring (0 = top), or -1 if this plane is not in the ring. */
+  ring: number;
   slot: Vec3;
   mesh: THREE.Mesh;
   mat: THREE.MeshBasicMaterial;
@@ -96,7 +98,8 @@ export class SphereScene {
   private lastT = performance.now();
   private tick = () => this.frame();
 
-  constructor(private hooks: SceneHooks, plates: Plate[]) {
+  /** `plates` are in sphere-slot order; `ringOrder` lists the intro ring by plate id (its textures are reused). */
+  constructor(private hooks: SceneHooks, plates: Plate[], ringOrder: string[] = plates.slice(0, RING_COUNT).map((p) => p.id)) {
     this.canvas = document.createElement('canvas');
     this.canvas.className = 'sphere-canvas';
     this.canvas.setAttribute('aria-hidden', 'true');
@@ -123,7 +126,7 @@ export class SphereScene {
           resolve();
         }, undefined, () => resolve());
       });
-      return { plate, index, slot: slots[index], mesh, mat, large: null, largeLoading: false, ready, intro: { opacity: 0, size: 0.01, cp: 0 } };
+      return { plate, index, ring: ringOrder.indexOf(plate.id), slot: slots[index], mesh, mat, large: null, largeLoading: false, ready, intro: { opacity: 0, size: 0.01, cp: 0 } };
     });
     this.resize();
     this.bind();
@@ -189,7 +192,7 @@ export class SphereScene {
   async playIntro(h: IntroHooks) {
     this.phase = 'ring';
     const start = performance.now();
-    const ring = this.planes.slice(0, RING_COUNT);
+    const ring = this.planes.filter((p) => p.ring >= 0).sort((a, b) => a.ring - b.ring);
     let loaded = 0;
     h.onProgress(0, ring.length);
     const loads = ring.map((p) => p.ready.then(() => h.onProgress(++loaded, ring.length)));
@@ -266,15 +269,15 @@ export class SphereScene {
       m.renderOrder = 0;
       p.mat.depthTest = true;
       if (this.phase === 'ring') {
-        const isRing = p.index < RING_COUNT;
+        const isRing = p.ring >= 0;
         if (!isRing) { m.visible = false; continue; }
         // Counter-clockwise on screen, starting at the top, 36° apart.
-        const a = -Math.PI / 2 + (p.index * 2 * Math.PI) / RING_COUNT - this.ring.rot;
+        const a = -Math.PI / 2 + (p.ring * 2 * Math.PI) / RING_COUNT - this.ring.rot;
         const cp = p.intro.cp;
         const rx = Math.cos(a) * L.ringPx * (1 - cp);
         const ry = Math.sin(a) * L.ringPx * (1 - cp);
         const size = lerp(p.intro.size, STACK_PX, cp);
-        m.position.set(rx * L.wpp, -ry * L.wpp, p.index * 1.5 * cp * L.wpp);
+        m.position.set(rx * L.wpp, -ry * L.wpp, p.ring * 1.5 * cp * L.wpp);
         m.scale.setScalar(Math.max(size, 0.01) * L.wpp);
         p.mat.opacity = p.intro.opacity;
         continue;
@@ -283,7 +286,7 @@ export class SphereScene {
         const t = this.explode.p;
         const bulge = 1 + 0.1 * Math.sin(Math.PI * t);
         const w = slotWorld(p.slot, this.q, L, bulge);
-        const sz = p.index < RING_COUNT ? p.index * 1.5 * L.wpp : 0;
+        const sz = p.ring >= 0 ? p.ring * 1.5 * L.wpp : 0;
         m.position.set(w[0] * t, w[1] * t, lerp(sz, w[2], t));
         m.scale.setScalar(lerp(STACK_PX * L.wpp, planeH, t));
         p.mat.opacity = 1;
@@ -540,7 +543,7 @@ export class SphereScene {
     const rows = this.planes.map((p) => {
       const m = p.mesh;
       const pr = project([m.position.x, m.position.y, m.position.z], m.scale.x, L);
-      return { i: p.index, id: p.plate.id, cx: pr.x, cy: pr.y, w: pr.w, h: pr.h, z: pr.z, opacity: p.mat.opacity, visible: m.visible };
+      return { i: p.index, id: p.plate.id, cx: pr.x, cy: pr.y, w: pr.w, h: pr.h, z: pr.z, opacity: p.mat.opacity, visible: m.visible, loaded: !!p.mat.map, ring: p.ring };
     });
     const order = [...rows].sort((a, b) => a.z - b.z);
     return {

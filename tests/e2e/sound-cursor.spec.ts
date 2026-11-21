@@ -234,7 +234,7 @@ test.describe('reduced motion', () => {
 
 test.describe('touch 390×844', () => {
   test.use({ viewport: PHONE, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
-  test('no prompt or cursor labels; the sound button works directly and does not crowd the nav', async ({ page }) => {
+  test('no prompt or cursor labels; the sound button works directly and clears the nav', async ({ page }) => {
     await page.goto('/');
     await phase(page, 'ring');
     await page.touchscreen.tap(195, 300);
@@ -250,8 +250,6 @@ test.describe('touch 390×844', () => {
     expect(await label(page)).toBeFalsy();
     const tb = (await toggle(page).boundingBox())!;
     const nav = await page.evaluate(() => (window as any).__mino.nav.pillRects());
-    const demo = (await page.locator('.demo-chip').boundingBox())!;
     expect(tb.x).toBeGreaterThan(nav.pills[2].right);
-    expect(demo.x + demo.width).toBeLessThan(nav.logo.left);
   });
 });

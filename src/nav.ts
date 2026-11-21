@@ -2,7 +2,6 @@
 // Label widths are measured from the rendered fonts, so the group re-centres for any wording.
 import { gsap } from 'gsap';
 import { name as brandName } from './config/brand';
-import { isDemo } from './content/sale';
 import { prefersReduced } from './ui/reveal';
 
 export type NavName = 'archive' | 'about' | 'labels';
@@ -68,16 +67,7 @@ export class Nav {
       if (this.active === 'archive' && location.pathname === '/') e.preventDefault();
     });
 
-    if (isDemo()) {
-      this.demo = document.createElement('p');
-      this.demo.className = 'demo-chip';
-      this.demo.textContent = 'Demo';
-      this.demo.title = 'Demo content: the label, pieces, dates and prices are not confirmed.';
-      const sr = document.createElement('span');
-      sr.className = 'sr-only';
-      sr.textContent = ' content. The label, pieces, dates and prices shown are not confirmed.';
-      this.demo.append(sr);
-    } else this.demo = null;
+    this.demo = null;
 
     document.body.append(this.el, this.logo);
     if (this.demo) document.body.append(this.demo);

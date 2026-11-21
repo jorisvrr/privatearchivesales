@@ -7,9 +7,12 @@ import { descriptor, name as brandName, siteTitle } from './src/config/brand.ts'
 function api(): Plugin {
   const handle = async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
     const url = req.url ?? '';
-    // Same permanent redirect as vercel.json: old signup URLs → /about.
-    if (/^\/(invitations|waitlist)(\/[^?]*)?(\?|$)/.test(url)) {
-      res.writeHead(301, { location: '/about' + (url.includes('?') ? url.slice(url.indexOf('?')) : '') });
+    // Same permanent redirects as vercel.json: old signup URLs → /about, old demo garments → /.
+    const path = url.split('?')[0];
+    const moved = /^\/(invitations|waitlist)(\/.*)?$/.test(path.replace(/\/+$/, '')) ? '/about'
+      : /^\/archive\/(chore-jacket|long-coat|poplin-shirt|ribbed-jumper|wide-leg-trouser)\/?$/.test(path) ? '/' : null;
+    if (moved) {
+      res.writeHead(301, { location: moved + (url.includes('?') ? url.slice(url.indexOf('?')) : '') });
       return res.end();
     }
     const route = url.startsWith('/api/enquiry') ? handleEnquiry : null;

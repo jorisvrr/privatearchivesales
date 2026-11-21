@@ -3,7 +3,7 @@ import { DESKTOP, expectNoReferenceBranding, frontPlane, PHONE, settled, snap, w
 
 const ENQUIRED = /will follow up personally about stock, timing and terms\.$/;
 const SIGNUP_WORDS = /join the waitlist|preview the waitlist|mailing list|subscribe|sign up for|get first access|next waitlist link/i;
-const OUTDATED = /booking|book a place|arrival|venue|in person|in-person|place at the sale|reserve|Orvel/i;
+const OUTDATED = /booking|book a place|arrival|\bvenue|in person|in-person|place at the sale|reserve|Orvel/i;
 const ABOUT = 'works with independent labels to bring past collections and samples back for a limited sale on the label’s own website. When a drop is announced, the label shares its waitlist link. Past customers can verify a previous order for first access. Everyone else who signs up is invited in the second round.';
 
 const visibleText = (page: Page) => page.evaluate(() => document.title + '\n' + document.body.innerText);
@@ -48,7 +48,7 @@ for (const [label, vp, touch] of [['1440×900', DESKTOP, false], ['390×844', PH
       await settled(page);
       await expect(page).toHaveURL(/\/archive\//);
       await page.getByRole('button', { name: 'Details' }).click();
-      await expect(page.getByText('Sold on the label’s own website while its archive is open.')).toBeVisible();
+      await expect(page.getByText('An AI-generated editorial study.')).toBeVisible();
       expect(await signupSurface(page)).toEqual({ forms: [], emailInputs: [], signupLinks: [] });
       expect(await visibleText(page)).not.toMatch(SIGNUP_WORDS);
       // Through the nav, on every destination.
@@ -67,7 +67,7 @@ for (const [label, vp, touch] of [['1440×900', DESKTOP, false], ['390×844', PH
 
     test('a label can still send an enquiry, and only to /api/enquiry with an email', async ({ page }) => {
       await page.goto('/for-labels');
-      await expect(page.getByText('Mino builds the archive page on your website. You share one waitlist link, your verified customers shop first, and the rest of your waitlist follows.')).toBeVisible();
+      await expect(page.getByText('Turn past collections and samples into a limited sale on your own website. Mino builds the experience and manages the launch. You choose the pieces, approve the prices, and fulfil the orders.')).toBeVisible();
       const cta = page.getByRole('button', { name: 'Plan an archive sale' });
       await expect(cta).toBeInViewport({ ratio: 1 });
       await cta.click();
@@ -147,7 +147,7 @@ test.describe('content checks', () => {
   test.use({ viewport: DESKTOP });
 
   test('no outdated claims; /for-labels states no fee figures', async ({ page }) => {
-    for (const path of ['/about', '/for-labels', '/archive/long-coat']) {
+    for (const path of ['/about', '/for-labels', '/archive/side-profile']) {
       await page.goto(path);
       await page.waitForTimeout(500);
       expect(await visibleText(page), path).not.toMatch(OUTDATED);
@@ -203,7 +203,7 @@ test.describe('without WebGL', () => {
     await expect(page.locator('.fallback .tile')).toHaveCount(18);
     await page.locator('.fallback .tile a').nth(1).click();
     await settled(page);
-    await expect(page).toHaveURL(/\/archive\/long-coat/);
+    await expect(page).toHaveURL(/\/archive\/sealed-envelope$/);
   });
 });
 

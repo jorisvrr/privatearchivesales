@@ -1,54 +1,55 @@
-// Piece detail, in the reference's case template: header at y 200, image blocks, and a Details panel.
+// Detail page for one photograph of the study, in the reference's case template: header at y 200,
+// the photograph, the rest of its group, and a Details panel with the collection details.
 import { pageTitle } from '../config/brand';
-import { EVENT_CREDIT, eventTitle, garmentBySlug, isDemo, labelName, platesFor, VIEW_NAMES } from '../content/sale';
+import { collection, groupOf, imageById, imageHref, imagesIn, type StudyImage } from '../content/study';
 import { Panel } from '../ui/panel';
 import { revealIn } from '../ui/reveal';
 import { h, type EnterInfo, type Page, type Route } from './types';
 
+const SIZES_HALF = '(max-width: 640px) calc(100vw - 16px), calc(50vw - 12px)';
+const figure = (image: StudyImage, eager: boolean) => {
+  const img = h('img', {
+    src: image.large, srcset: `${image.medium} 640w, ${image.large} 1086w`, sizes: SIZES_HALF,
+    alt: image.alt, width: '1086', height: '1448', loading: eager ? 'eager' : 'lazy', decoding: 'async',
+  }) as HTMLImageElement;
+  return { img, el: h('figure', { class: 'block' }, img, h('figcaption', { class: 'block__cap' }, image.caption)) };
+};
+
 export function piecePage(route: Route): Page | null {
-  const g = garmentBySlug(route.slug ?? '');
-  if (!g) return null;
-  const plates = platesFor(g.slug);
+  const image = imageById(route.slug ?? '');
+  if (!image) return null;
+  const group = groupOf(image);
+  const others = imagesIn(image.group).filter((i) => i.id !== image.id);
   const head = h('header', { class: 'head' },
-    h('h1', { class: 'head__name', tabindex: '-1', 'data-reveal': 'words' }, g.title),
-    h('p', { class: 'head__sub', 'data-reveal': 'words' }, eventTitle()),
+    h('h1', { class: 'head__name', tabindex: '-1', 'data-reveal': 'words' }, image.caption),
+    h('p', { class: 'head__sub', 'data-reveal': 'words' }, `${group.name} · ${collection.title}`),
   );
-  const imgs: HTMLImageElement[] = [];
-  const blocks = h('div', { class: 'blocks' }, ...plates.map((p, i) => {
-    const img = h('img', { src: p.large, alt: p.alt, width: '960', height: '1280', loading: i < 2 ? 'eager' : 'lazy', decoding: 'async' }) as HTMLImageElement;
-    imgs.push(img);
-    return h('figure', { class: 'block', id: `plate-${p.id.slice(0, 2)}` }, img, h('figcaption', { class: 'block__cap' }, VIEW_NAMES[p.view]));
-  }));
-  const scroll = h('div', { class: 'page__scroll' }, head, blocks, h('footer', { class: 'foot' }, EVENT_CREDIT));
+  const hero = figure(image, true);
+  const rest = others.map((o) => figure(o, false));
+  const scroll = h('div', { class: 'page__scroll' }, head,
+    h('div', { class: 'blocks blocks--hero' }, hero.el),
+    h('section', { class: 'blocks', 'aria-label': `Also in ${group.name}` }, ...rest.map((r) => r.el)),
+    h('footer', { class: 'foot' }, collection.credit),
+  );
   const el = h('main', { class: 'page page--piece', id: 'main' }, scroll);
 
-  const facts: [string, string | null][] = [['Season', g.season], ['Size', g.size], ['Condition', g.condition], ['Archive price', g.price]];
-  const supplied = facts.filter(([, v]) => v);
   const list = (title: string, ...items: (Node | string)[]) =>
     h('div', { class: 'panel__list' }, h('h3', { class: 'panel__list-title', 'data-reveal': 'words' }, title), ...items);
+  const item = (text: Node | string, reveal = 'words') => h('p', { class: 'panel__item', 'data-reveal': reveal }, text);
   const body = h('div', {},
-    h('h2', { class: 'panel__name', 'data-reveal': 'words' }, g.title),
-    h('p', { class: 'panel__type', 'data-reveal': 'words' }, labelName()),
-    g.note
-      ? h('p', { class: 'panel__desc', 'data-reveal': 'lines' }, g.note)
-      : isDemo()
-        ? h('p', { class: 'panel__desc', 'data-reveal': 'lines' }, 'Demo piece. Once the label confirms it, this space holds the founder’s note, with the season, size, condition and archive price.')
-        : '',
-    list('Details', ...(supplied.length
-      ? supplied.map(([k, v]) => h('p', { class: 'panel__item', 'data-reveal': 'words' }, `${k}: ${v}`))
-      : [h('p', { class: 'panel__item', 'data-reveal': 'words' }, 'To be confirmed by the label')])),
-    list('Availability',
-      h('p', { class: 'panel__item', 'data-reveal': 'lines' }, 'Sold on the label’s own website while its archive is open.'),
-    ),
+    h('h2', { class: 'panel__name', 'data-reveal': 'words' }, image.caption),
+    h('p', { class: 'panel__type', 'data-reveal': 'words' }, group.name),
+    h('p', { class: 'panel__desc', 'data-reveal': 'lines' }, image.alt),
+    list('Collection', item(collection.title), item(collection.credit), item(collection.disclosure)),
+    list(`Also in ${group.name}`, ...others.map((o) => item(h('a', { href: imageHref(o), class: 'panel__link' }, o.caption), 'block'))),
   );
-  const panel = new Panel({ id: 'details', label: 'Piece details', closedLabel: 'Details', body });
+  const panel = new Panel({ id: 'details', label: 'Photograph details', closedLabel: 'Details', body });
   const chrome = h('div', { class: 'chrome' }, panel.el);
-  const first = imgs[0];
-  const ready = first ? Promise.race([first.decode().catch(() => undefined), new Promise((r) => setTimeout(r, 800))]).then(() => undefined) : Promise.resolve();
+  const ready = Promise.race([hero.img.decode().catch(() => undefined), new Promise((r) => setTimeout(r, 800))]).then(() => undefined);
 
   return {
     route,
-    title: pageTitle(`${g.title} — ${labelName()}`),
+    title: pageTitle(`${image.caption} — ${collection.title}`),
     el,
     chrome,
     ready,
@@ -72,7 +73,7 @@ export function notFoundPage(route: Route): Page {
   const el = h('main', { class: 'page page--notfound', id: 'main' },
     h('div', { class: 'page__scroll' },
       h('header', { class: 'head' },
-        h('h1', { class: 'head__name', tabindex: '-1' }, 'This page isn’t part of the sale.'),
+        h('h1', { class: 'head__name', tabindex: '-1' }, 'This page isn’t part of the archive.'),
         h('p', { class: 'head__sub' }, h('a', { href: '/' }, 'Back to the Archive')),
       ),
     ),

@@ -79,10 +79,6 @@ img { display: block; max-width: 100%; }
   font: 600 14px/20px var(--sans); letter-spacing: -0.01em; color: #fff; mix-blend-mode: exclusion;
   text-decoration: none; white-space: nowrap; will-change: transform;
 }
-.demo-chip {
-  position: fixed; top: 8px; right: 52px; z-index: 9999; height: 24px; padding: 0 8px; border-radius: 4px;
-  font: 500 11px/24px var(--sans); background: var(--glass); -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px);
-}
 
 /* Sound control: a 28×24 glass pill at the nav's 8 px inset, inside a 44×44 target. */
 .sound-toggle {
@@ -98,7 +94,6 @@ img { display: block; max-width: 100%; }
 .sound-toggle:focus-visible { outline: none; }
 .sound-toggle:focus-visible .sound-toggle__pill { outline: 2px solid var(--ink); outline-offset: 2px; }
 .icon { display: block; flex: none; }
-@media (max-width: 1024px) { .demo-chip { right: auto; left: 8px; } }
 
 /* ------------------------------------------------------------------ pages and transitions */
 .pages { position: fixed; inset: 0; overflow: hidden; }
@@ -129,6 +124,7 @@ img { display: block; max-width: 100%; }
 .block { position: relative; background: var(--skeleton); aspect-ratio: 3 / 4; overflow: hidden; }
 .block img { width: 100%; height: 100%; object-fit: cover; }
 .block:only-child { grid-column: 1 / -1; max-width: 50%; justify-self: center; width: 100%; }
+.blocks--hero + .blocks { padding-top: 8px; }
 .block__cap { position: absolute; left: 8px; bottom: 8px; padding: 4px 8px 3px; border-radius: 4px; font: 500 12px/1.2 var(--sans);
   background: rgba(255,255,255,.5); -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px); }
 .page--piece .foot { margin-top: 80px; }
@@ -156,6 +152,17 @@ img { display: block; max-width: 100%; }
 .lede--text .lede__copy { margin-top: 40px; max-width: 470px; font-size: 18px; line-height: 1.5; }
 @media (max-width: 640px) { .lede--text { padding-bottom: 10vh; } .lede--text .lede__copy { margin-top: 32px; font-size: 16px; } }
 .lede__price { margin-top: 20px; max-width: 430px; font: 400 15px/1.45 var(--serif); color: var(--ink); }
+.lede__access { margin-top: 20px; max-width: 430px; font: 500 14px/1.45 var(--sans); color: var(--ink); }
+/* For labels: inclusions as two compact ruled lists, then process and pricing. */
+.offer { margin: 120px auto 0; padding: 0 16px; max-width: 760px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.offer__title { font: 500 12px/1.2 var(--sans); color: var(--ink); margin-bottom: 14px; }
+.offer__list { list-style: none; margin: 0; padding: 0; }
+.offer__list li { display: flex; gap: 14px; padding: 12px 0; border-top: 1px solid var(--card-border); font: 400 17px/1.35 var(--serif); }
+.offer__list li:last-child { border-bottom: 1px solid var(--card-border); }
+.offer__num { flex: none; min-width: 18px; font: 500 11px/23px var(--sans); opacity: 0.6; }
+.pricing { margin: 96px auto 0; padding: 0 16px; max-width: 440px; text-align: center; }
+.pricing__text { font: 400 16px/25.6px var(--serif); }
+.page--labels .foot { margin-top: 96px; }
 
 /* ------------------------------------------------------------------ glass panel / bottom sheet */
 .panel {
@@ -381,7 +388,8 @@ a.cta { text-decoration: none; }
   .chapter__row { column-gap: 24px; }
   .chapter__num { font-size: 52px; }
   .head { padding-top: 160px; }
-  .steps { padding-bottom: 120px; }
+  .steps { padding-bottom: 0; }
+  .offer { grid-template-columns: 1fr; gap: 40px; margin-top: 80px; }
 }
 
 /* ------------------------------------------------------------------ no JavaScript */

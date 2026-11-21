@@ -8,7 +8,7 @@ import { ArchivePage } from './pages/archive';
 import { aboutPage } from './pages/about';
 import { labelsPage } from './pages/labels';
 import { notFoundPage, piecePage } from './pages/piece';
-import { isRetiredSignupPath, parseRoute, type Page, type Route } from './pages/types';
+import { parseRoute, retiredRedirect, type Page, type Route } from './pages/types';
 import { sound } from './sound';
 import { prefersReduced } from './ui/reveal';
 import { createSoundToggle } from './ui/sound-toggle';
@@ -57,9 +57,10 @@ function unmount(p: Page) {
 async function go(href: string, kind: 'push' | 'pop' | 'initial') {
   const url = new URL(href, location.href);
   const route = parseRoute(url.pathname);
-  // Old signup links land on /about (the server answers with a 301; this covers in-app and dev).
-  if (isRetiredSignupPath(url.pathname)) {
-    url.pathname = '/about';
+  // Old URLs (signup pages → /about, demo garments → /): the server answers with a 301; this covers in-app and dev.
+  const moved = retiredRedirect(url.pathname);
+  if (moved) {
+    url.pathname = moved;
     if (kind !== 'push') history.replaceState(null, '', url.pathname + url.search + url.hash);
   }
   if (kind === 'push') {

@@ -15,7 +15,8 @@ test.describe('desktop 1440×900', () => {
     await page.waitForFunction(() => (window as any).__mino.archive().scene.snapshot().planes.filter((p: any) => p.visible && p.opacity > 0.5).length === 10, null, { timeout: 15_000 });
     const ring = await snap(page);
     expect(ring.phase).toBe('ring');
-    expect(ring.planes.filter((p) => p.visible).map((p) => p.i).sort((a, b) => a - b)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    // The ten ring planes are the art-directed intro selection, in ring order.
+    expect(ring.planes.filter((p) => p.visible).sort((a, b) => a.ring - b.ring).map((p) => p.id)).toEqual(['sealed-envelope', 'mino-study-001', 'corduroy-swatch-card', 'bomber-on-plaster', 'jeans-laid-flat', 'side-profile', 'brass-eyelets', 'bomber-in-tissue', 'tied-parcel', 'empty-hanger']);
     await page.mouse.move(720, 450);
     await page.mouse.down();
     await page.mouse.move(900, 450, { steps: 5 });
@@ -26,8 +27,8 @@ test.describe('desktop 1440×900', () => {
     await waitLive(page);
     const s = await snap(page);
     expect(s.planes.filter((p) => p.visible)).toHaveLength(18);
-    await expect(page.locator('.title-row')).toContainText('Featured label — Archive Sale 001');
-    await expect(page.locator('.title-row')).toContainText('Organized by Mino');
+    await expect(page.locator('.title-row')).toContainText('Mino Study 001');
+    await expect(page.locator('.title-row')).toContainText('An editorial study by Mino');
     await expect(page.locator('.intro')).toHaveCount(0);
     await expectNoReferenceBranding(page);
   });
@@ -75,12 +76,12 @@ test.describe('desktop 1440×900', () => {
     const t = await frontPlane(page);
     await page.mouse.move(t.cx, t.cy);
     await page.waitForTimeout(40);
-    await expect(page.locator('.title-row').last()).not.toContainText('Organized by Mino', { timeout: 1000 });
+    await expect(page.locator('.title-row').last()).not.toContainText('An editorial study by Mino', { timeout: 1000 });
     const after = (await snap(page)).planes[t.i];
     expect(Math.abs(after.h - t.h)).toBeLessThan(0.5);
     expect(Math.hypot(after.cx - t.cx, after.cy - t.cy)).toBeLessThan(1);
     await page.mouse.move(60, 450);
-    await expect(page.locator('.title-row').last()).toContainText('Organized by Mino');
+    await expect(page.locator('.title-row').last()).toContainText('An editorial study by Mino');
   });
 
   test('click expands to 472.5×630 centred; others vanish; cursor label; open slides up; Back keeps orientation', async ({ page }) => {
@@ -115,7 +116,7 @@ test.describe('desktop 1440×900', () => {
     await expect(page).toHaveURL(/\/archive\/[a-z-]+$/);
     expect(await page.evaluate(() => [document.querySelector('.pages')!.scrollTop, document.querySelector('.page--piece .page__scroll')!.scrollTop])).toEqual([0, 0]);
     await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('.head__sub')).toHaveText('Featured label — Archive Sale 001');
+    await expect(page.locator('.head__sub')).toContainText('Mino Study 001');
     await page.goBack();
     await expect(page.locator('.track')).toHaveCount(0); // Back is instant
     await expect(page.locator('.page--archive')).toBeVisible();
@@ -194,10 +195,10 @@ test.describe('desktop 1440×900', () => {
     const link = page.locator('.kb-list a').first();
     await link.focus();
     await expect(link).toBeVisible();
-    await expect(page.locator('.title-row').last()).toContainText('Chore jacket');
+    await expect(page.locator('.title-row').last()).toContainText('Empty hanger');
     await page.keyboard.press('Enter');
     await settled(page);
-    await expect(page).toHaveURL(/\/archive\/chore-jacket/);
+    await expect(page).toHaveURL(/\/archive\/empty-hanger$/);
     await expect(page.locator('h1')).toBeFocused();
   });
 });

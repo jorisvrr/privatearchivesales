@@ -6,7 +6,7 @@ export const TABLET = { width: 768, height: 1024 };
 
 export type Snap = {
   phase: string; ambient: boolean; sinceExplode: number | null; q: number[]; expanded: string | null; e: number;
-  planes: { i: number; id: string; cx: number; cy: number; w: number; h: number; z: number; opacity: number; visible: boolean; layer: number }[];
+  planes: { i: number; id: string; cx: number; cy: number; w: number; h: number; z: number; opacity: number; visible: boolean; layer: number; loaded: boolean; ring: number }[];
 };
 
 export const snap = (p: Page): Promise<Snap> => p.evaluate(() => (window as any).__mino.archive().scene.snapshot());

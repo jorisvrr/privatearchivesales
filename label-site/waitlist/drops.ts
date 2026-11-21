@@ -1,5 +1,4 @@
 // Drops served by a label-site waitlist deployment. Not used by Mino's public website.
-import { labelName, sale } from '../../src/content/sale.ts';
 
 /** How a drop checks that someone bought from the label before (order number + checkout email). */
 export type OrderVerification = 'shopify' | 'webhook' | null;
@@ -17,5 +16,8 @@ export type DropInfo = Drop & { label: string; status: 'demo' | 'confirmed' | 'n
 
 export const DROPS: Drop[] = [{ id: 'demo-archive-001', waitlistUrl: null, verification: null }];
 
-export const drops = (): DropInfo[] => DROPS.map((d) => ({ ...d, label: labelName(), status: sale.status }));
+/** The label this deployment serves, and whether its drop is confirmed. Set per label site. */
+export const LABEL = { name: 'Featured label', status: 'demo' as DropInfo['status'] };
+
+export const drops = (): DropInfo[] => DROPS.map((d) => ({ ...d, label: LABEL.name, status: LABEL.status }));
 export const dropById = (id: string) => drops().find((d) => d.id === id) ?? null;

@@ -14,3 +14,6 @@ label-site/waitlist/emails/rendered/
 
 # Side-by-side sheets include screenshots of the reference site: local only, never published
 verification/*.jpg
+
+# Mino Study 001 original PNGs (46 MB): kept locally, built into public/media/study-001
+assets/study-001/originals/

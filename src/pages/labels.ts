@@ -18,17 +18,42 @@ export function chapter(num: string, left: string, right: string, text: string) 
 
 export function labelsPage(route: Route): Page {
   const cta = h('button', { type: 'button', class: 'cta', 'aria-controls': 'enquiry', 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'data-reveal': 'block' }, 'Plan an archive sale') as HTMLButtonElement;
+  const list = (title: string, items: string[], numbered: boolean) =>
+    h('div', { class: 'offer__col' },
+      h('h2', { class: 'offer__title', 'data-reveal': 'words' }, title),
+      h('ol', { class: 'offer__list' }, ...items.map((text, i) =>
+        h('li', { 'data-reveal': 'block' }, h('span', { class: 'offer__num', 'aria-hidden': 'true' }, numbered ? String(i + 1).padStart(2, '0') : '+'), h('span', {}, text)))),
+    );
   const scroll = h('div', { class: 'page__scroll' },
     h('header', { class: 'lede' },
-      h('h1', { class: 'lede__title', tabindex: '-1', 'data-reveal': 'lines' }, 'Open your archive on your own site.'),
-      h('p', { class: 'lede__copy', 'data-reveal': 'lines' }, `${name} builds the archive page on your website. You share one waitlist link, your verified customers shop first, and the rest of your waitlist follows.`),
-      h('p', { class: 'lede__price', 'data-reveal': 'lines' }, `A small upfront fee covers setup. ${name} then earns a percentage of sales made through the archive event.`),
+      h('h1', { class: 'lede__title', tabindex: '-1', 'data-reveal': 'lines' }, 'Your archive. A new source of revenue.'),
+      h('p', { class: 'lede__copy', 'data-reveal': 'lines' }, `Turn past collections and samples into a limited sale on your own website. ${name} builds the experience and manages the launch. You choose the pieces, approve the prices, and fulfil the orders.`),
+      h('p', { class: 'lede__access', 'data-reveal': 'lines' }, 'Your past customers shop first. Your wider audience follows.'),
+      h('p', { class: 'lede__price', 'data-reveal': 'lines' }, `A small upfront fee covers setup. ${name} then earns an agreed percentage of sales generated through the archive sale.`),
       cta,
     ),
+    h('section', { class: 'offer', 'aria-label': 'What’s included' },
+      list('Included', [
+        'A temporary archive page designed for your label',
+        'A brand-specific waitlist and two access rounds',
+        'Launch coordination',
+        'Reporting on sales attributed to the drop',
+        'Page removal after the sale',
+      ], true),
+      list('Also included', [
+        'Ready-to-use announcement and invitation copy',
+        'A simple launch schedule',
+        'A post-sale review with recommendations for the next drop',
+      ], false),
+    ),
     h('section', { class: 'steps', 'aria-label': 'How an archive sale works' },
-      chapter('I', 'Step one', 'Select the archive', 'You choose the pieces, prices and sale window.'),
-      chapter('II', 'Step two', 'Share one link', `${name} builds the archive page on your website. You post one waitlist link, and anyone can sign up for the drop.`),
-      chapter('III', 'Step three', 'Open in two rounds', `Customers who verify a previous order shop first. The rest of your waitlist follows. When the drop ends, ${name} removes the page and reviews event sales with you. The percentage applies only to sales attributable to that event.`),
+      chapter('I', 'Step one', 'Select the archive', 'You choose the pieces and approve the prices. Together we agree the drop’s opening and closing dates.'),
+      chapter('II', 'Step two', 'Open in two rounds', `${name} builds the temporary page on your website. You share your drop’s waitlist link. Past customers verify a previous order and shop first; your wider audience follows.`),
+      chapter('III', 'Step three', 'Close and review', `You fulfil the orders. When the drop closes, ${name} removes the page, reports the sales attributed to it, and reviews the results with you.`),
+    ),
+    h('section', { class: 'pricing', 'aria-label': 'Pricing' },
+      h('h2', { class: 'offer__title', 'data-reveal': 'words' }, 'Pricing'),
+      h('p', { class: 'pricing__text', 'data-reveal': 'lines' }, `A small upfront fee covers setup. ${name} then earns an agreed percentage of sales generated through the archive sale. The percentage applies only to sales attributed to the drop.`),
     ),
     h('footer', { class: 'foot' }, siteTitle),
   );
