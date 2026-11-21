@@ -7,6 +7,7 @@ import { Nav, type NavName } from './nav';
 import { ArchivePage } from './pages/archive';
 import { aboutPage } from './pages/about';
 import { labelsPage } from './pages/labels';
+import { planPage } from './pages/plan';
 import { notFoundPage, piecePage } from './pages/piece';
 import { parseRoute, retiredRedirect, type Page, type Route } from './pages/types';
 import { sound } from './sound';
@@ -26,7 +27,7 @@ let archive: ArchivePage | null = null;
 let current: Page | null = null;
 let running: { tween: gsap.core.Tween | null; finish: () => void } | null = null;
 
-const navName = (r: Route): NavName => (r.name === 'about' ? 'about' : r.name === 'labels' ? 'labels' : 'archive');
+const navName = (r: Route): NavName => (r.name === 'about' ? 'about' : r.name === 'labels' || r.name === 'plan' ? 'labels' : 'archive');
 
 function makePage(route: Route): Page {
   switch (route.name) {
@@ -36,6 +37,8 @@ function makePage(route: Route): Page {
       return aboutPage(route);
     case 'labels':
       return labelsPage(route);
+    case 'plan':
+      return planPage(route);
     case 'piece':
       return piecePage(route) ?? notFoundPage(route);
     default:
@@ -70,6 +73,11 @@ async function go(href: string, kind: 'push' | 'pop' | 'initial') {
     }
     history.pushState(null, '', url.pathname + url.search + url.hash);
   }
+  // Back/Forward between steps of the same page (e.g. /plan?step=2): let the page update itself.
+  if (kind === 'pop' && current && route.path === current.route.path && current.onSameRoutePop) {
+    current.onSameRoutePop();
+    return;
+  }
   // A click during a running slide cuts it short, then starts a fresh slide (AUDIT.md §6).
   running?.finish();
 
@@ -92,8 +100,8 @@ async function go(href: string, kind: 'push' | 'pop' | 'initial') {
     return;
   }
 
-  // Piece pages sit a level deeper: they slide vertically.
-  const deep = (n: string) => n === 'piece';
+  // Piece pages and the /plan enquiry sit a level deeper: they slide vertically.
+  const deep = (n: string) => n === 'piece' || n === 'plan';
   const toDeeper = deep(route.name) && !deep(old!.route.name);
   const fromDeeper = deep(old!.route.name) && !deep(route.name);
   const axis = toDeeper || fromDeeper ? 'y' : 'x';

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { DESKTOP, expectNoReferenceBranding, frontPlane, PHONE, settled, snap, waitLive } from './helpers';
 
-const ENQUIRED = /will follow up personally about stock, timing and terms\.$/;
+const ENQUIRED = /Your enquiry is with Mino\./;
 const SIGNUP_WORDS = /join the waitlist|preview the waitlist|mailing list|subscribe|sign up for|get first access|next waitlist link/i;
 const OUTDATED = /booking|book a place|arrival|\bvenue|in person|in-person|place at the sale|reserve|Orvel/i;
 const ABOUT = 'works with independent labels to bring past collections and samples back for a limited sale on the label’s own website. When a drop is announced, the label shares its waitlist link. Past customers can verify a previous order for first access. Everyone else who signs up is invited in the second round.';
@@ -65,30 +65,25 @@ for (const [label, vp, touch] of [['1440×900', DESKTOP, false], ['390×844', PH
       expect(requests.filter((p) => p !== '/api/enquiry')).toEqual([]);
     });
 
-    test('a label can still send an enquiry, and only to /api/enquiry with an email', async ({ page }) => {
+    test('a label can still send an enquiry through /plan, and only to /api/enquiry', async ({ page }) => {
       await page.goto('/for-labels');
-      await expect(page.getByText('Turn past collections and samples into a limited sale on your own website. Mino builds the experience and manages the launch. You choose the pieces, approve the prices, and fulfil the orders.')).toBeVisible();
-      const cta = page.getByRole('button', { name: 'Plan an archive sale' });
+      const cta = page.getByRole('link', { name: 'Plan an archive sale' });
       await expect(cta).toBeInViewport({ ratio: 1 });
       await cta.click();
-      const dialog = page.getByRole('dialog', { name: 'Plan an archive sale' });
-      await expect(dialog.getByRole('textbox')).toHaveCount(1);
+      await settled(page);
+      await expect(page).toHaveURL(/\/plan$/);
       expect(await visibleText(page)).not.toMatch(SIGNUP_WORDS);
       const sent: { path: string; body: Record<string, string> }[] = [];
       page.on('request', (r) => { if (r.url().includes('/api/')) sent.push({ path: new URL(r.url()).pathname, body: JSON.parse(r.postData() ?? '{}') }); });
-      const email = page.getByLabel('Work email');
-      const submit = dialog.getByRole('button', { name: 'Contact Mino' });
-      await submit.click();
-      await expect(page.locator('#enq-email-error')).toHaveText('Enter your work email.');
-      await email.fill('fail@studio.example');
-      await submit.click();
-      await expect(page.locator('[data-alert]')).toHaveText('Your enquiry wasn’t sent. Please try again in a moment.');
-      await expect(email).toHaveValue('fail@studio.example');
-      await email.fill('founder@studio.example');
-      await submit.click();
-      await expect(page.locator('.fp-success')).toHaveText(ENQUIRED);
-      expect(sent.map((s) => s.path)).toEqual(['/api/enquiry', '/api/enquiry']);
-      expect(Object.keys(sent[1].body).sort()).toEqual(['email', 'website']);
+      await page.getByText('Past collections', { exact: true }).click();
+      await page.getByRole('button', { name: 'Continue' }).click();
+      await page.getByText('Exploring', { exact: true }).click();
+      await page.locator('.plan__step[data-step="2"] .fp-button').click();
+      await page.getByLabel('Work email').fill('founder@studio.example');
+      await page.getByRole('button', { name: 'Send my enquiry' }).click();
+      await expect(page.getByRole('heading', { name: 'Your enquiry is with Mino.' })).toBeVisible();
+      expect(sent.map((s) => s.path)).toEqual(['/api/enquiry']);
+      expect(Object.keys(sent[0].body).sort()).toEqual(['brand', 'email', 'fax', 'release', 'timing']);
     });
   });
 }
@@ -213,6 +208,8 @@ test.describe('no JavaScript', () => {
     await page.goto('/about');
     expect(await page.locator('.noscript form').evaluateAll((fs) => fs.map((f) => f.getAttribute('action')))).toEqual(['/api/enquiry']);
     await expect(page.locator('.noscript')).not.toContainText(/join the waitlist|order number/i);
+    await page.locator('#ns-release').selectOption('Samples');
+    await page.locator('#ns-timing').selectOption('Exploring');
     await page.locator('#ns-work').fill('founder@studio.example');
     await page.locator('.noscript form').getByRole('button').click();
     await expect(page.getByText(ENQUIRED)).toBeVisible();

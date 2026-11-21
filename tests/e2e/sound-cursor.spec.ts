@@ -208,10 +208,9 @@ test.describe('desktop 1440×900: after the intro', () => {
     await expect(page).toHaveURL(/\/archive\//);
   });
 
-  test('the enquiry popup closes with Lucide’s X', async ({ page }) => {
-    await page.goto('/for-labels');
-    await page.getByRole('button', { name: 'Plan an archive sale' }).click();
-    await expect(page.getByRole('button', { name: 'Close' }).locator('svg.lucide-x')).toHaveCount(1);
+  test('the /plan Exit uses Lucide’s X', async ({ page }) => {
+    await page.goto('/plan');
+    await expect(page.getByRole('link', { name: 'Exit' }).locator('svg.lucide-x')).toHaveCount(1);
   });
 });
 

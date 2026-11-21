@@ -22,14 +22,21 @@
         <p class="noscript__brand">%BRAND_NAME% <span>%BRAND_DESCRIPTOR%</span></p>
         <h1>Private archive sales for independent labels.</h1>
         <p>%BRAND_NAME% works with independent labels to bring past collections and samples back for a limited sale on the label’s own website. When a drop is announced, the label shares its waitlist link. Past customers can verify a previous order for first access. Everyone else who signs up is invited in the second round.</p>
-        <h2>Your archive. A new source of revenue.</h2>
-        <p>Turn past collections and samples into a limited sale on your own website. %BRAND_NAME% builds the experience and manages the launch. You choose the pieces, approve the prices, and fulfil the orders.</p>
-        <p>Your past customers shop first. Your wider audience follows.</p>
-        <p>A small upfront fee covers setup. %BRAND_NAME% then earns an agreed percentage of sales generated through the archive sale.</p>
+        <h2>Give your archive its next release.</h2>
+        <p>A limited sale on your own website, with first access for your past customers.</p>
+        <p>%BRAND_NAME% builds the page and coordinates the launch. You choose the pieces, approve the prices, and fulfil the orders.</p>
+        <p>A small setup fee, plus an agreed percentage of archive-sale revenue.</p>
         <form method="post" action="/api/enquiry">
+          <label for="ns-release">What would you like to release?</label>
+          <select id="ns-release" name="release" required><option value="">Choose one</option><option>Past collections</option><option>Samples</option><option>Both</option><option>Still exploring</option></select>
+          <label for="ns-timing">When are you considering a sale?</label>
+          <select id="ns-timing" name="timing" required><option value="">Choose one</option><option>Next month</option><option>Within three months</option><option>Exploring</option></select>
           <label for="ns-work">Work email</label>
           <input id="ns-work" name="email" type="email" required autocomplete="email" />
-          <button type="submit">Contact %BRAND_NAME%</button>
+          <label for="ns-brand">Brand website or Instagram (optional)</label>
+          <input id="ns-brand" name="brand" autocomplete="url" />
+          <button type="submit">Send my enquiry</button>
+          <p>No commitment. We’ll use your details to respond to this enquiry.</p>
         </form>
       </div>
     </noscript>

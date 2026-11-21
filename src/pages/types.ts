@@ -1,4 +1,4 @@
-export type RouteName = 'archive' | 'about' | 'labels' | 'piece' | 'notfound';
+export type RouteName = 'archive' | 'about' | 'labels' | 'plan' | 'piece' | 'notfound';
 
 export interface Route {
   name: RouteName;
@@ -31,6 +31,8 @@ export interface Page {
   destroy(): void;
   /** Element to focus after an in-app route change. */
   focusTarget(): HTMLElement | null;
+  /** Browser Back/Forward within the same path (e.g. /plan?step=2): the page updates itself instead of being rebuilt. */
+  onSameRoutePop?(): void;
 }
 
 /** Mino's site takes no shopper signups; these old URLs all land on /about. */
@@ -50,6 +52,7 @@ export function parseRoute(pathname: string): Route {
   if (isRetiredSignupPath(path)) return { name: 'about', path: '/about' };
   if (RETIRED_PIECES.test(path)) return { name: 'archive', path: '/' };
   if (path === '/for-labels') return { name: 'labels', path };
+  if (path === '/plan') return { name: 'plan', path };
   const m = path.match(/^\/archive\/([a-z0-9-]+)$/);
   if (m) return { name: 'piece', path, slug: m[1] };
   return { name: 'notfound', path };

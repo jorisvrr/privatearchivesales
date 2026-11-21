@@ -1,6 +1,5 @@
-// Progressive enhancement for the native forms. Without JavaScript they post directly to /api.
+// Form helpers for /plan and the label-site waitlist kit. Without JavaScript the forms post directly to /api.
 // Success is shown only after the server confirms that the provider accepted the request (2xx).
-import { name } from './config/brand';
 
 export interface PostResult { ok: boolean; status: number; body: Record<string, unknown> }
 
@@ -22,17 +21,6 @@ export async function post(url: string, data: Record<string, string>): Promise<P
 export const EMAIL_INVALID = 'Enter a valid email address, like name@example.com.';
 
 export interface FieldCopy { missing: string; invalid?: string }
-
-/** Archive-sale enquiries from founders: one work email. A business enquiry only — never a drop signup. */
-export const ENQUIRY = {
-  busy: 'Sending…',
-  fields: { email: { missing: 'Enter your work email.', invalid: EMAIL_INVALID } } as Record<string, FieldCopy>,
-  alerts: {
-    not_configured: 'Enquiries can’t be sent from this page yet. Nothing was sent. Please try again soon.',
-    failed: 'Your enquiry wasn’t sent. Please try again in a moment.',
-  } as Record<string, string>,
-  success: `Thanks. ${name} will follow up personally about stock, timing and terms.`,
-};
 
 type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
@@ -112,40 +100,4 @@ export function formUI(form: HTMLFormElement, onChange?: () => void) {
     if (el.getAttribute('aria-invalid')) { clearError(el); onChange?.(); }
   });
   return { alert, button, control, setError, clearError, say, busy, validate };
-}
-
-interface WireOptions {
-  endpoint: string;
-  busy: string;
-  fields: Record<string, FieldCopy>;
-  alerts: Record<string, string>;
-  onSuccess(r: PostResult): void;
-  onChange?(): void;
-}
-
-/** Simple one-shot form (the founder enquiry). */
-export function wireForm(form: HTMLFormElement, o: WireOptions) {
-  const ui = formUI(form, o.onChange);
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (ui.button.disabled) return;
-    ui.say(null);
-    if (!ui.validate(o.fields)) return;
-    const data: Record<string, string> = {};
-    new FormData(form).forEach((v, k) => { data[k] = String(v); });
-    ui.busy(true, o.busy);
-    const r = await post(o.endpoint, data);
-    ui.busy(false, o.busy);
-    if (r.ok) return o.onSuccess(r);
-    if (r.status === 422) {
-      const names = (r.body.fields as string[] | undefined) ?? Object.keys(o.fields);
-      const bad = names.map(ui.control).filter((x): x is Control => !!x);
-      bad.forEach((el) => ui.setError(el, o.fields[el.name]?.invalid ?? o.fields[el.name]?.missing ?? 'Check this field.'));
-      bad[0]?.focus();
-      return;
-    }
-    const key = r.status === 503 && r.body.error === 'not_configured' ? 'not_configured' : 'failed';
-    ui.say(o.alerts[key] ?? o.alerts.failed);
-    o.onChange?.();
-  });
 }

@@ -4,11 +4,20 @@ Mino builds the archive page on a label's website. The label shares one waitlist
 
 - **Archive** `/`: the featured label's pieces on a WebGL sphere. Select a piece to enlarge it; open it for details at `/archive/<garment>`.
 - **About** `/about`: what Mino is and how drops work. No signup: each label announces its drop and collects signups on its own website. Old signup URLs (`/invitations…`, `/waitlist…`) redirect here permanently (301).
-- **For labels** `/for-labels`: the offer, how the fee works, three steps, and "Plan an archive sale", an email-only business enquiry (never a drop signup).
+- **For labels** `/for-labels`: the offer, how the fee works, what's included, a labelled illustrative preview (Study 001 imagery, not client work), and "Plan an archive sale", which opens the enquiry funnel.
+- **Plan an archive sale** `/plan`: a three-step business enquiry for founders (never a drop signup). See below.
 
 ## No shopper signups on Mino's site
 
 Mino's public site explains the service and takes founder enquiries only. It has no waitlist route, form, endpoint or link, even when a drop is live. The per-drop waitlist (verified first access, second round) lives in `label-site/waitlist/` for deployment on a label's own website; see its README.
+
+## Plan an archive sale (/plan)
+
+`src/pages/plan.ts`. Step 1 of 3 asks what the label would release (Past collections / Samples / Both / Still exploring), step 2 when (Next month / Within three months / Exploring), step 3 takes a work email (required; personal domains are fine) and an optional brand website or Instagram. Each step has one primary action: an explicit Continue (choosing an option never advances), with Back and Exit always available. Answers survive Back, browser Back/Forward (`/plan?step=2|3`, via the router's `onSameRoutePop` hook) and failed sends. A deep link to a later step without answers starts at step 1. The confirmation ("Your enquiry is with Mino.") appears only after the server confirms delivery; while sending, the button is disabled and repeat submits are ignored. Steps swap in about 150 ms out and 220 ms in, instantly with reduced motion. No intro, sound or custom cursor on this route.
+
+`POST /api/enquiry` accepts `{ release, timing, email, brand }` and validates the two answers against the same option lists the page uses (`server/enquiry.ts`, a unit test keeps them equal). `fax` is a hidden honeypot. Enquiries are never added to a waitlist or marketing list. Without JavaScript, `index.html`'s noscript block posts the same fields from a plain form.
+
+Funnel analytics (`src/analytics.ts`): `plan_start`, `plan_step_complete` (step number and the chosen fixed option), `plan_submit_success`, `plan_submit_failure` (reason). No email or typed text is ever sent. No analytics provider is installed: events are dispatched as a `mino:analytics` DOM event and forwarded to Vercel Web Analytics custom events (`window.va`) if that script is added later.
 
 ## Sound and cursor
 
@@ -36,11 +45,11 @@ Local form testing without real providers: `ENQUIRY_PROVIDER=mock MINO_ALLOW_MOC
 
 ## Launch configuration (not set yet)
 
-There was no existing mailing or contact integration in this project, so both forms go through `server/handlers.ts` (Vercel Functions in `api/`). Until configured, they reply "not open yet" and never show success. See `.env.example`; check with `node --env-file=.env scripts/check-config.mjs`. Tests can also run against the dev server: `E2E_DEV=1 node node_modules/@playwright/test/cli.js test`.
+There was no existing mailing or contact integration in this project, so the enquiry goes through `server/handlers.ts` (Vercel Functions in `api/`). Until configured, it replies "Enquiries can’t be sent from this page yet" and never shows success. See `.env.example`; check with `node --env-file=.env scripts/check-config.mjs`. Tests can also run against the dev server: `E2E_DEV=1 node node_modules/@playwright/test/cli.js test`.
 
 | Form | Needs |
 |---|---|
-| Plan an archive sale (/for-labels) | `ENQUIRY_PROVIDER=resend` + `RESEND_API_KEY` + `ENQUIRY_TO` + `ENQUIRY_FROM` (a verified sending domain), **or** `webhook` + `ENQUIRY_WEBHOOK_URL` |
+| Plan an archive sale (/plan) | `ENQUIRY_PROVIDER=resend` + `RESEND_API_KEY` + `ENQUIRY_TO` + `ENQUIRY_FROM` (a verified sending domain), **or** `webhook` + `ENQUIRY_WEBHOOK_URL` |
 
 Waitlist configuration belongs to the label-site deployment (`label-site/waitlist/README.md`). Also needed before launch: a production domain with a verified sender address, and a privacy notice covering the enquiry form.
 
